@@ -20,26 +20,10 @@ var usersLoginInfo = map[string]User{
 	},
 }
 
-//
-//var userIdSequence = int64(1)
-//
-////type UserLoginResponse struct {
-////	Response
-////	UserId int64  `json:"user_id,omitempty"`
-////	Token  string `json:"token"`
-////}
-////
-////type UserResponse struct {
-////	Response
-////	User User `json:"user"`
-////}
-
 func Register(c *gin.Context) {
 	var userRegisterService service.UserService
 	username := c.Query("username")
 	password := c.Query("password")
-	fmt.Println(username, len(username))
-	fmt.Println(password, len(password))
 	if len(password) < 6 || len(username) < 3 {
 		code := e.InvalidParams
 		c.JSON(code, e.GetMsg(code))
@@ -69,17 +53,9 @@ func Login(c *gin.Context) {
 }
 
 func UserInfo(c *gin.Context) {
+	var userInfoService service.UserService
+	userId := c.Query("user_id")
 	token := c.Query("token")
-	fmt.Println(token)
-
-	//if user, exist := usersLoginInfo[token]; exist {
-	//	c.JSON(http.StatusOK, UserResponse{
-	//		Response: Response{StatusCode: 0},
-	//		User:     user,
-	//	})
-	//} else {
-	//	c.JSON(http.StatusOK, UserResponse{
-	//		Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
-	//	})
-	//}
+	res := userInfoService.UserInfo(userId, token)
+	c.JSON(200, res)
 }

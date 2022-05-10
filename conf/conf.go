@@ -1,8 +1,8 @@
 package conf
 
 import (
+	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/pkg/util"
-	"github.com/RaymondCode/simple-demo/repository"
 	"gopkg.in/ini.v1"
 	"strings"
 )
@@ -31,7 +31,7 @@ func Init() {
 	LoadServer(file)
 	LoadMysqlData(file)
 	path := strings.Join([]string{DbUser, ":", DbPassWord, "@tcp(", DbHost, ":", DbPort, ")/", DbName, "?charset=utf8&parseTime=true"}, "")
-	repository.Database(path)
+	model.Database(path)
 }
 
 func LoadServer(file *ini.File) {

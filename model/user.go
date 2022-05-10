@@ -1,4 +1,4 @@
-package repository
+package model
 
 import (
 	"github.com/jinzhu/gorm"
@@ -10,6 +10,9 @@ type User struct {
 	gorm.Model
 	UserName       string `gorm:"unique"`
 	PasswordDigest string
+	FollowCount    int64 `gorm:"default:0"`
+	FollowerCount  int64 `gorm:"default:0"`
+	IsFollow       bool  `gorm:"default:false"`
 }
 
 const (

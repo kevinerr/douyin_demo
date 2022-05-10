@@ -1,4 +1,4 @@
-package repository
+package model
 
 import (
 	"github.com/gin-gonic/gin"

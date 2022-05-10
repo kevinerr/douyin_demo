@@ -1,17 +1,15 @@
 package serializer
 
 type Response struct {
-	StatusCode int         `json:"status_code"`
-	StatusMsg  string      `json:"status_msg,omitempty"`
-	Data       interface{} `json:"data"`
+	StatusCode int    `json:"status_code"`
+	StatusMsg  string `json:"status_msg,omitempty"`
 }
-type Register struct {
-	Token  string `json:"token"`
-	UserId int    `json:"user_id"`
-}
-type Login struct {
-	Token  string `json:"token"`
-	UserId int    `json:"user_id"`
+type User struct {
+	Id            int64  `json:"id,omitempty"`
+	Name          string `json:"name,omitempty"`
+	FollowCount   int64  `json:"follow_count,omitempty"`
+	FollowerCount int64  `json:"follower_count,omitempty"`
+	IsFollow      bool   `json:"is_follow,omitempty"`
 }
 
 type Video struct {
@@ -29,12 +27,4 @@ type Comment struct {
 	User       User   `json:"user"`
 	Content    string `json:"content,omitempty"`
 	CreateDate string `json:"create_date,omitempty"`
-}
-
-type User struct {
-	Id            int64  `json:"id,omitempty"`
-	Name          string `json:"name,omitempty"`
-	FollowCount   int64  `json:"follow_count,omitempty"`
-	FollowerCount int64  `json:"follower_count,omitempty"`
-	IsFollow      bool   `json:"is_follow,omitempty"`
 }
