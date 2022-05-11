@@ -11,7 +11,7 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 11/05/2022 15:06:55
+ Date: 11/05/2022 20:11:27
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `comment` (
   `content` text NOT NULL COMMENT '评论内容',
   `create_time` datetime NOT NULL COMMENT '评论时间',
   PRIMARY KEY (`id`),
-  KEY `idx_comment_video_id` (`video_id`)
+  KEY `idx_comment_video_id` (`video_id`) USING BTREE COMMENT '查询视频评论列表'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -41,7 +41,7 @@ CREATE TABLE `favorite` (
   `video_id` bigint NOT NULL COMMENT '点赞视频的ID',
   `create_time` datetime NOT NULL COMMENT '点赞时间',
   PRIMARY KEY (`id`),
-  KEY `idx_favorite_user_id` (`user_id`)
+  KEY `idx_favorite_user_id` (`user_id`) USING BTREE COMMENT '查询用户点赞的视频列表'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -54,7 +54,8 @@ CREATE TABLE `follow` (
   `follow_id` bigint NOT NULL COMMENT '被关注用户ID',
   `create_time` datetime NOT NULL COMMENT '关注记录时间',
   PRIMARY KEY (`id`),
-  KEY `idx_follow_follow_id` (`follow_id`)
+  KEY `idx_follow_follower_id` (`follower_id`) USING BTREE COMMENT '查询关注列表',
+  KEY `idx_follow_follow_id` (`follow_id`) USING BTREE COMMENT '查询粉丝列表'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -69,7 +70,7 @@ CREATE TABLE `user` (
   `follow_count` bigint DEFAULT NULL COMMENT '关注总数',
   `follower_count` bigint DEFAULT NULL COMMENT '粉丝总数',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uni_user_username` (`username`)
+  UNIQUE KEY `uni_user_username` (`username`) USING BTREE COMMENT '用户名唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -86,7 +87,8 @@ CREATE TABLE `video` (
   `comment_count` bigint DEFAULT NULL COMMENT '视频的评论总数',
   `create_time` datetime NOT NULL COMMENT '视频创建时间',
   PRIMARY KEY (`id`),
-  KEY `idx_video_author_id` (`author_id`)
+  KEY `idx_video_author_id` (`author_id`) USING BTREE COMMENT '查询发布视频列表',
+  KEY `idx_video_create_time` (`create_time`) USING BTREE COMMENT '查询视频流'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;
