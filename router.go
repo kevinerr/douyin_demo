@@ -9,18 +9,25 @@ import (
 
 func initRouter(r *gin.Engine) {
 	// public directory is used to serve static resources
+
+	//加载模板 放在配置路由前面
+	//r.LoadHTMLGlob("templates/*")
 	r.Static("/static", "./public")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler)) // 开启swag
-
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
 	apiRouter.GET("/feed/", controller.Feed)
-	apiRouter.GET("/user/", controller.UserInfo)
 	apiRouter.POST("/user/register/", controller.Register)
 	apiRouter.POST("/user/login/", controller.Login)
+	apiRouter.GET("/user/", controller.UserInfo)
 	apiRouter.POST("/publish/action/", controller.Publish)
 	apiRouter.GET("/publish/list/", controller.PublishList)
+	//authed := apiRouter.Group("/") //需要登陆保护
+	//authed.Use(middleware.JWT())
+	//{
+	//
+	//}
 
 	// extra apis - I
 	apiRouter.POST("/favorite/action/", controller.FavoriteAction)

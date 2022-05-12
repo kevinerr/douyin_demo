@@ -15,18 +15,29 @@ func (c UserRepository) CreateUser(user *model.User) error {
 func (c UserRepository) IsExistUser(username string) (*model.User, bool) {
 	var user model.User
 	var count int
-	model.DB.Where("user_name=?", username).First(&user).Count(&count)
+	model.DB.Where("username=?", username).First(&user).Count(&count)
 	if count == 1 {
 		return &user, true
 	}
 	return &user, false
 }
 
-func (c UserRepository) SelectById(userId string) (*model.User, error) {
+func (c UserRepository) SelectById(userId int64) (*model.User, error) {
 	var user model.User
 	if err := model.DB.Where("id=?", userId).First(&user).Error; err != nil {
 		return nil, err
 	}
 
 	return &user, nil
+}
+
+//follower_id--粉丝用户ID,follow_id--被关注用户ID
+func (c UserRepository) IsFollow(followerId int64, followId int64) (*model.Follow, bool) {
+	var follow model.Follow
+	var count int
+	model.DB.Where("follower_id=? AND follow_id=?", followerId, followId).First(&follow).Count(&count)
+	if count == 1 {
+		return &follow, true
+	}
+	return &follow, false
 }

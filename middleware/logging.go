@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	"github.com/RaymondCode/simple-demo/pkg/util"
 	"github.com/gin-gonic/gin"
 	"time"
-	"to-do-list/pkg/util"
 )
 
 func NewLogger() gin.HandlerFunc {

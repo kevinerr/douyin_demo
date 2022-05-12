@@ -1,18 +1,15 @@
 package service
 
 import (
-	"fmt"
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/pkg/util"
 	"github.com/RaymondCode/simple-demo/repository"
 	"github.com/RaymondCode/simple-demo/serializer"
 	"github.com/jinzhu/gorm"
 	logging "github.com/sirupsen/logrus"
-	"sync/atomic"
+	"strconv"
 	"time"
 )
-
-var userIdSequence = int32(1)
 
 //UserRegisterService 用户服务
 type UserService struct {
@@ -31,7 +28,7 @@ func (service *UserService) Register() serializer.UserLoginResponse {
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	user.UserName = service.UserName
+	user.Username = service.UserName
 	//加密密码
 	if err := user.SetPassword(service.Password); err != nil {
 		logging.Info(err)
@@ -40,11 +37,11 @@ func (service *UserService) Register() serializer.UserLoginResponse {
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	//生成ID
-	atomic.AddInt32(&userIdSequence, 1)
-	user.ID = uint(userIdSequence)
+	//雪花算法生成ID
+	snow := util.Snowflake{}
+	user.Id = snow.Generate()
 	//生成token
-	token, err := util.GenerateToken(user.ID, service.UserName, 0)
+	token, err := util.GenerateToken(user.Id, service.UserName, 0)
 	if err != nil {
 		logging.Info(err)
 		code = e.ErrorAuthToken
@@ -62,17 +59,15 @@ func (service *UserService) Register() serializer.UserLoginResponse {
 	}
 	return serializer.UserLoginResponse{
 		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		UserId:   int64(user.ID),
+		UserId:   user.Id,
 		Token:    token,
 	}
 }
 
 //Login 用户登陆函数
 func (service *UserService) Login() serializer.UserLoginResponse {
-	//var user model.User
 	code := e.SUCCESS
 	var userLoginRepository repository.UserRepository
-	//var flag bool
 	user, flag := userLoginRepository.IsExistUser(service.UserName)
 	if !flag {
 		//如果查询不到，返回相应的错误
@@ -87,7 +82,7 @@ func (service *UserService) Login() serializer.UserLoginResponse {
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	token, err := util.GenerateToken(user.ID, service.UserName, 0)
+	token, err := util.GenerateToken(user.Id, service.UserName, 0)
 	if err != nil {
 		logging.Info(err)
 		code = e.ErrorAuthToken
@@ -97,15 +92,16 @@ func (service *UserService) Login() serializer.UserLoginResponse {
 	}
 	return serializer.UserLoginResponse{
 		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		UserId:   int64(user.ID),
+		UserId:   user.Id,
 		Token:    token,
 	}
 }
 
+//useId是被查询者的ID，token判断查询者是否登录
 func (service *UserService) UserInfo(userId string, token string) serializer.UserResponse {
-	//var user model.User
+	userIdInt64, _ := strconv.ParseInt(userId, 10, 64)
 	var userInfoRepository repository.UserRepository
-	claims, err := util.ParseToken(token)
+	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	code := e.SUCCESS
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
@@ -118,7 +114,7 @@ func (service *UserService) UserInfo(userId string, token string) serializer.Use
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	user, err := userInfoRepository.SelectById(userId)
+	user, err := userInfoRepository.SelectById(userIdInt64) //查询是否存在useId的用户
 	if err != nil {
 		//如果查询不到，返回相应的错误
 		if gorm.IsRecordNotFoundError(err) {
@@ -129,9 +125,11 @@ func (service *UserService) UserInfo(userId string, token string) serializer.Use
 			}
 		}
 	}
-	fmt.Println(user.FollowerCount)
+
+	_, flag := userInfoRepository.IsFollow(claims.Id, userIdInt64) //查询A是否关注B
+	isFollow := flag
 	return serializer.UserResponse{
 		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		User:     serializer.User{Id: int64(user.ID), Name: user.UserName, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: user.IsFollow},
+		User:     serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow},
 	}
 }

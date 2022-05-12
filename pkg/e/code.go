@@ -16,4 +16,7 @@ const (
 	ErrorAuthToken             = 30003
 	ErrorAuth                  = 30004
 	ErrorDatabase              = 40001
+
+	SuccessUpLoadFile = 20000
+	ErrorUpLoadFile   = 20001
 )

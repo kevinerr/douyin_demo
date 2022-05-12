@@ -9,14 +9,14 @@ import (
 var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 type Claims struct {
-	Id        uint   `json:"id"`
+	Id        int64  `json:"id"`
 	Username  string `json:"username"`
 	Authority int    `json:"authority"`
 	jwt.StandardClaims
 }
 
 //GenerateToken 签发用户Token
-func GenerateToken(id uint, username string, authority int) (string, error) {
+func GenerateToken(id int64, username string, authority int) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(24 * time.Hour)
 	claims := Claims{

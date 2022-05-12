@@ -14,6 +14,9 @@ var MsgFlags = map[int]string{
 	ErrorAuthToken:             "Token生成失败",
 	ErrorAuth:                  "Token错误",
 	ErrorDatabase:              "数据库操作出错,请重试",
+
+	SuccessUpLoadFile: "文件上传成功",
+	ErrorUpLoadFile:   "文件上传失败",
 }
 
 // GetMsg 获取状态码对应信息
