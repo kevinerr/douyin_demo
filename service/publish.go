@@ -15,14 +15,10 @@ import (
 )
 
 type PublishService struct {
-	Description string    `json:"description"`
-	PlayUrl     string    `json:"play_url"`
-	CoverUrl    string    `json:"cover_url"`
-	CreateTime  time.Time `json:"create_time"`
 }
 
 func (service *PublishService) Publish(token string, data *multipart.FileHeader, c *gin.Context) serializer.Response {
-	var publishRepository repository.PublishRepository
+	var videoRepository repository.VideoRepository
 	claims, err := util.ParseToken(token)
 	code := e.SuccessUpLoadFile
 	if err != nil {
@@ -58,7 +54,7 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 	}
 	//publishRepository.CreateVideo(video)
 	//创建video
-	if err := publishRepository.CreateVideo(video); err != nil {
+	if err := videoRepository.CreateVideo(video); err != nil {
 		logging.Info(err)
 		code = e.ErrorDatabase
 		return serializer.Response{
@@ -88,7 +84,7 @@ func (service *PublishService) PublishList(token string) serializer.PublishRespo
 	}
 	userId := claims.Id
 	var results []serializer.Video
-	user, err := publishRepository.SelectById(userId) //TODO 好笨的方法
+	user, _ := publishRepository.SelectById(userId) //TODO 好笨的方法
 	userResp := serializer.User{Id: userId, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount}
 	model.DB.Table("video").Select("video.id,cover_url,play_url,favorite_count, comment_count").Joins("left join user on video.author_id = ?", userId).Scan(&results)
 	fmt.Println(results)

@@ -101,8 +101,8 @@ func (service *UserService) Login() serializer.UserLoginResponse {
 func (service *UserService) UserInfo(userId string, token string) serializer.UserResponse {
 	userIdInt64, _ := strconv.ParseInt(userId, 10, 64)
 	var userInfoRepository repository.UserRepository
-	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	code := e.SUCCESS
+	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
 		return serializer.UserResponse{
