@@ -1,19 +1,22 @@
 package service
 
 import (
+	"fmt"
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/pkg/util"
 	"github.com/RaymondCode/simple-demo/repository"
 	"github.com/RaymondCode/simple-demo/serializer"
+	"strconv"
 	"time"
 )
 
 type FeedService struct {
 }
 
+var timeLayoutStr = "2006-01-02 15:04:05"
+
 func (service *FeedService) VideoList(latestTime string, token string) serializer.FeedResponse {
-	//var videoRepository repository.VideoRepository
 	var userRepository repository.UserRepository
 	code := e.SUCCESS
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
@@ -28,16 +31,27 @@ func (service *FeedService) VideoList(latestTime string, token string) serialize
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	var videos []serializer.Video
+	var videos = make([]serializer.Video, 2) //TODO,单词最多返回的视频个数
 	var res []model.Video
-	model.DB.Find(&res).Scan(videos)
-	for i := 0; i < len(videos); i++ {
+	int64latestTime, err := strconv.ParseInt(latestTime, 10, 64)                  //将string时间戳转化为int64时间戳
+	timeStr := time.Unix(int64latestTime, 0).Format(timeLayoutStr)                //将int64时间戳装换成是string时间
+	model.DB.Where("create_time<?", timeStr).Order("create_time DESC").Find(&res) //返回按投稿时间小于timeStr的视频
+	fmt.Println(res)
+	for i := 0; i < len(res); i++ {
 		user, _ := userRepository.SelectById(res[i].AuthorId) //TODO 好笨的方法
+		videos[i].Id = res[i].AuthorId
+		videos[i].CoverUrl = res[i].CoverUrl
+		videos[i].PlayUrl = res[i].PlayUrl
+		videos[i].FavoriteCount = res[i].FavoriteCount
+		videos[i].CommentCount = res[i].CommentCount
+		videos[i].IsFavorite = false //TODO
 		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount}
 		videos[i].Author = userResp
 	}
+	next_time := res[0].CreateTime
 	return serializer.FeedResponse{
 		Response:  serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		VideoList: videos,
+		NextTime:  next_time.Unix(),
 	}
 }

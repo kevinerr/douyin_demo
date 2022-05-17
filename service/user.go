@@ -19,8 +19,8 @@ type UserService struct {
 
 func (service *UserService) Register() serializer.UserLoginResponse {
 	code := e.SUCCESS
-	var userRegisterRepository repository.UserRepository
-	user, flag := userRegisterRepository.IsExistUser(service.UserName)
+	var userRegisterRepository repository.UserRepository               //Dao层
+	user, flag := userRegisterRepository.IsExistUser(service.UserName) //判断用户名是否存在，存在flag返回true，否则返回false
 	//表单验证
 	if flag {
 		code = e.ErrorExistUser
@@ -68,7 +68,7 @@ func (service *UserService) Register() serializer.UserLoginResponse {
 func (service *UserService) Login() serializer.UserLoginResponse {
 	code := e.SUCCESS
 	var userLoginRepository repository.UserRepository
-	user, flag := userLoginRepository.IsExistUser(service.UserName)
+	user, flag := userLoginRepository.IsExistUser(service.UserName) //判断用户名是否存在，存在flag返回true，否则返回false
 	if !flag {
 		//如果查询不到，返回相应的错误
 		code = e.ErrorNotExistUser
@@ -76,13 +76,13 @@ func (service *UserService) Login() serializer.UserLoginResponse {
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	if user.CheckPassword(service.Password) == false {
+	if user.CheckPassword(service.Password) == false { //检查密码
 		code = e.ErrorNotCompare
 		return serializer.UserLoginResponse{
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	token, err := util.GenerateToken(user.Id, service.UserName, 0)
+	token, err := util.GenerateToken(user.Id, service.UserName, 0) //生成token
 	if err != nil {
 		logging.Info(err)
 		code = e.ErrorAuthToken

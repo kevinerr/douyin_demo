@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/service"
 	"github.com/gin-gonic/gin"
@@ -24,6 +23,7 @@ func Register(c *gin.Context) {
 	var userRegisterService service.UserService
 	username := c.Query("username")
 	password := c.Query("password")
+	//检验用户名和密码格式
 	if len(password) < 6 || len(username) < 3 {
 		code := e.InvalidParams
 		c.JSON(code, e.GetMsg(code))
@@ -39,7 +39,7 @@ func Login(c *gin.Context) {
 	var userLoginService service.UserService
 	username := c.Query("username")
 	password := c.Query("password")
-
+	//检验用户名和密码格式
 	if len(password) < 6 || len(username) < 3 {
 		code := e.InvalidParams
 		c.JSON(code, e.GetMsg(code))
@@ -48,7 +48,6 @@ func Login(c *gin.Context) {
 	userLoginService.UserName = username
 	userLoginService.Password = password
 	res := userLoginService.Login()
-	fmt.Println(res)
 	c.JSON(200, res)
 }
 

@@ -19,7 +19,7 @@ type PublishService struct {
 
 func (service *PublishService) Publish(token string, data *multipart.FileHeader, c *gin.Context) serializer.Response {
 	var videoRepository repository.VideoRepository
-	claims, err := util.ParseToken(token)
+	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	code := e.SuccessUpLoadFile
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
@@ -34,8 +34,8 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 	}
 	filename := filepath.Base(data.Filename)
 	userId := claims.Id
-	finalName := fmt.Sprintf("%d_%s", userId, filename) //TODO,应上传至OSS上，得到地址
-	saveFile := filepath.Join("./public/", finalName)
+	finalName := fmt.Sprintf("%d_%s", userId, filename)
+	saveFile := filepath.Join("./public/", finalName) //将文件存储到public文件夹中
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
 		code = e.ErrorUpLoadFile
 		return serializer.Response{
@@ -48,11 +48,10 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 		Id:          snow.Generate(),
 		AuthorId:    claims.Id,
 		Description: "testDescription",
-		PlayUrl:     saveFile,
+		PlayUrl:     "http://localhost:8080/static/" + filename,
 		CoverUrl:    "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
 		CreateTime:  time.Now(),
 	}
-	//publishRepository.CreateVideo(video)
 	//创建video
 	if err := videoRepository.CreateVideo(video); err != nil {
 		logging.Info(err)
