@@ -80,7 +80,7 @@ DROP TABLE IF EXISTS `video`;
 CREATE TABLE `video` (
   `id` bigint NOT NULL COMMENT '视频ID',
   `author_id` bigint NOT NULL COMMENT '作者的ID',
-  `description` text COMMENT '视频描述',
+  `title` text COMMENT '视频标题',
   `play_url` varchar(1024) NOT NULL COMMENT '视频播放地址',
   `cover_url` varchar(1024) NOT NULL COMMENT '视频封面地址',
   `favorite_count` bigint DEFAULT NULL COMMENT '视频的点赞总数',

@@ -33,7 +33,7 @@ func (service *FeedService) VideoList(latestTime0 string, token string) serializ
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	var videos = make([]serializer.Video, 2) //TODO,单词最多返回的视频个数
+	var videos = make([]serializer.Video, 2) //TODO,单次最多返回的视频个数
 	var res []model.Video
 	int64latestTime, err := strconv.ParseInt(latestTime, 10, 64)                                                 //将string时间戳转化为int64时间戳
 	timeStr := time.Unix(int64latestTime, 0).Format(timeLayoutStr)                                               //将int64时间戳装换成是string时间
