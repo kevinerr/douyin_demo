@@ -16,7 +16,9 @@ type FeedService struct {
 
 var timeLayoutStr = "2006-01-02 15:04:05"
 
-func (service *FeedService) VideoList(latestTime string, token string) serializer.FeedResponse {
+func (service *FeedService) VideoList(latestTime0 string, token string) serializer.FeedResponse {
+	latestTime := latestTime0[0:10]
+	fmt.Println(latestTime)
 	var userRepository repository.UserRepository
 	code := e.SUCCESS
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
@@ -33,9 +35,9 @@ func (service *FeedService) VideoList(latestTime string, token string) serialize
 	}
 	var videos = make([]serializer.Video, 2) //TODO,单词最多返回的视频个数
 	var res []model.Video
-	int64latestTime, err := strconv.ParseInt(latestTime, 10, 64)                  //将string时间戳转化为int64时间戳
-	timeStr := time.Unix(int64latestTime, 0).Format(timeLayoutStr)                //将int64时间戳装换成是string时间
-	model.DB.Where("create_time<?", timeStr).Order("create_time DESC").Find(&res) //返回按投稿时间小于timeStr的视频
+	int64latestTime, err := strconv.ParseInt(latestTime, 10, 64)                                                 //将string时间戳转化为int64时间戳
+	timeStr := time.Unix(int64latestTime, 0).Format(timeLayoutStr)                                               //将int64时间戳装换成是string时间
+	model.DB.Model(&model.Video{}).Where("create_time<?", timeStr).Limit(2).Order("create_time DESC").Find(&res) //返回按投稿时间小于timeStr的视频
 	fmt.Println(res)
 	for i := 0; i < len(res); i++ {
 		user, _ := userRepository.SelectById(res[i].AuthorId) //TODO 好笨的方法
