@@ -41,13 +41,15 @@ func (service *FeedService) VideoList(latestTime0 string, token string) serializ
 	fmt.Println(res)
 	for i := 0; i < len(res); i++ {
 		user, _ := userRepository.SelectById(res[i].AuthorId) //TODO 好笨的方法
-		videos[i].Id = res[i].AuthorId
+		videos[i].Id = res[i].Id
 		videos[i].CoverUrl = res[i].CoverUrl
 		videos[i].PlayUrl = res[i].PlayUrl
 		videos[i].FavoriteCount = res[i].FavoriteCount
 		videos[i].CommentCount = res[i].CommentCount
 		videos[i].IsFavorite = false //TODO
-		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount}
+		videos[i].Title = res[i].Title
+		_, isFollow := userRepository.IsFollow(claims.Id, user.Id)
+		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow}
 		videos[i].Author = userResp
 	}
 	next_time := res[0].CreateTime
