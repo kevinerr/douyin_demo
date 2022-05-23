@@ -44,6 +44,6 @@ func LoadMysqlData(file *ini.File) {
 	DbHost = file.Section("mysql").Key("DbHost").String()
 	DbPort = file.Section("mysql").Key("DbPort").String()
 	DbUser = file.Section("mysql").Key("DbUser").String()
-	DbPassWord = file.Section("mysql").Key("DbPassWord").String() + "#123456abAB"
+	DbPassWord = file.Section("mysql").Key("DbPassWord").String()
 	DbName = file.Section("mysql").Key("DbName").String()
 }
