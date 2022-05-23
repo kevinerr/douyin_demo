@@ -1,7 +1,7 @@
 package e
 
 const (
-	SUCCESS       = 200
+	SUCCESS       = 0
 	ERROR         = 500
 	InvalidParams = 400
 
@@ -17,6 +17,7 @@ const (
 	ErrorAuth                  = 30004
 	ErrorDatabase              = 40001
 
-	SuccessUpLoadFile = 20000
-	ErrorUpLoadFile   = 20001
+	SuccessUpLoadFile   = 20000
+	ErrorUpLoadFile     = 20001
+	OutOfUserPermission = 20002
 )

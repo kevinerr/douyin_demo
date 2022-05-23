@@ -4,6 +4,7 @@ import (
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/service"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // usersLoginInfo use map to store user info, and key is username+password for demo
@@ -32,7 +33,7 @@ func Register(c *gin.Context) {
 	userRegisterService.UserName = username
 	userRegisterService.Password = password
 	res := userRegisterService.Register()
-	c.JSON(200, res)
+	c.JSON(http.StatusOK, res)
 }
 
 func Login(c *gin.Context) {
@@ -48,7 +49,7 @@ func Login(c *gin.Context) {
 	userLoginService.UserName = username
 	userLoginService.Password = password
 	res := userLoginService.Login()
-	c.JSON(200, res)
+	c.JSON(http.StatusOK, res)
 }
 
 func UserInfo(c *gin.Context) {
@@ -56,5 +57,5 @@ func UserInfo(c *gin.Context) {
 	userId := c.Query("user_id")
 	token := c.Query("token")
 	res := userInfoService.UserInfo(userId, token)
-	c.JSON(200, res)
+	c.JSON(http.StatusOK, res)
 }
