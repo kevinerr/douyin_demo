@@ -22,7 +22,7 @@ func (c CommentRepository) DeleteComment(commentId int64) error {
 
 //select comments of a video
 func (c CommentRepository) SelectComments(videoId int64, comments *[]model.Comment) error {
-	err := model.DB.Where("video_id=?", videoId).Find(&comments).Error
+	err := model.DB.Where("video_id=?", videoId).Order("create_time DESC").Find(&comments).Error
 	return err
 }
 
