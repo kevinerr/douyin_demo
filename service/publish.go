@@ -89,7 +89,7 @@ func (service *PublishService) PublishList(userId string, token string) serializ
 	var results []serializer.Video
 	user, _ := publishRepository.SelectById(userIdInt64) //TODO is_favorite
 	userResp := serializer.User{Id: userIdInt64, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount}
-	model.DB.Table("video").Select("video.id,cover_url,play_url,favorite_count, comment_count,title").Joins("left join user on video.author_id = ?", userId).Scan(&results)
+	model.DB.Model(&model.Video{}).Select("id,cover_url,play_url,favorite_count, comment_count,title").Where("author_id=?", userId).Find(&results)
 	fmt.Println(results)
 	for i := 0; i < len(results); i++ {
 		results[i].Author = userResp
