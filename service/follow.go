@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/RaymondCode/simple-demo/controller"
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/pkg/util"
 	"github.com/RaymondCode/simple-demo/repository"
@@ -9,6 +8,10 @@ import (
 	"time"
 )
 
+type Response struct {
+	StatusCode int32  `json:"status_code"`
+	StatusMsg  string `json:"status_msg,omitempty"`
+}
 type FollowService struct {
 }
 
@@ -21,32 +24,49 @@ type User struct {
 }
 
 // RelationAction 关系操作
-func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeStr, token string) controller.Response {
+func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeStr, token string) Response {
+	//token验证
+	claims, err := util.ParseToken(token) //token判断查询者是否登录
+	code := 0
+	if err != nil {
+		code = e.ErrorAuthCheckTokenFail
+		return Response{
+			StatusCode: int32(code),
+			StatusMsg:  "token错误",
+		}
+	} else if time.Now().Unix() > claims.ExpiresAt {
+		code = e.ErrorAuthCheckTokenTimeout
+		return Response{
+			StatusCode: int32(code),
+			StatusMsg:  "token超时",
+		}
+	}
+	//参数解析
 	userId, err := strconv.ParseInt(userIdStr, 10, 64)
 	toUserId, err := strconv.ParseInt(toUserIdStr, 10, 64)
 	actionType, err := strconv.ParseInt(actionTypeStr, 10, 32)
 	if err != nil {
-		return controller.Response{
+		return Response{
 			StatusCode: 400,
 			StatusMsg:  "参数解析失败",
 		}
 	}
 	//校验一下合理性
-	if actionType != 1 || actionType != 2 {
-		return controller.Response{
+	if actionType != 1 && actionType != 2 {
+		return Response{
 			StatusCode: 402,
 			StatusMsg:  "actionType参数有误",
 		}
 	}
 	var userDao repository.UserRepository
 	if user, err := userDao.SelectById(userId); user == nil || err != nil {
-		return controller.Response{
+		return Response{
 			StatusCode: 403,
 			StatusMsg:  "userId不存在",
 		}
 	}
 	if user, err := userDao.SelectById(toUserId); user == nil || err != nil {
-		return controller.Response{
+		return Response{
 			StatusCode: 403,
 			StatusMsg:  "toUserId不存在",
 		}
@@ -56,31 +76,31 @@ func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeS
 	var followDao repository.FollowRepository
 	flag := followDao.RelationAct(userId, toUserId, int32(actionType))
 	if !flag {
-		return controller.Response{
+		return Response{
 			StatusCode: 401,
 			StatusMsg:  "数据修改失败",
 		}
 	}
-	return controller.Response{
+	return Response{
 		StatusCode: 0,
 		StatusMsg:  "数据修改成功",
 	}
 }
 
 // GetFollowListByUId 用户列表
-func (service *FollowService) GetFollowListByUId(token, userId string) ([]User, controller.Response) {
+func (service *FollowService) GetFollowListByUId(token, userId string) ([]User, Response) {
 	//token验证
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
-	code := e.SuccessUpLoadFile
+	code := 0
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: int32(code),
 			StatusMsg:  "token错误",
 		}
 	} else if time.Now().Unix() > claims.ExpiresAt {
 		code = e.ErrorAuthCheckTokenTimeout
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: int32(code),
 			StatusMsg:  "token超时",
 		}
@@ -89,14 +109,14 @@ func (service *FollowService) GetFollowListByUId(token, userId string) ([]User, 
 	var followDao = repository.FollowRepository{}
 	num, err := strconv.ParseInt(userId, 10, 64)
 	if err != nil {
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: 400,
 			StatusMsg:  "参数解析失败",
 		}
 	}
 	res, err := followDao.GetFollowListByUId(num)
 	if err != nil {
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: 401,
 			StatusMsg:  err.Error() + ",数据库查询数据失败!",
 		}
@@ -115,26 +135,26 @@ func (service *FollowService) GetFollowListByUId(token, userId string) ([]User, 
 		users = append(users, user)
 	}
 	//返回
-	return users, controller.Response{
+	return users, Response{
 		StatusCode: 0,
 		StatusMsg:  "获取成功",
 	}
 }
 
 // GetFollowerListByUId 粉丝列表
-func (service *FollowService) GetFollowerListByUId(token, userId string) ([]User, controller.Response) {
+func (service *FollowService) GetFollowerListByUId(token, userId string) ([]User, Response) {
 	//token验证
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	code := e.SuccessUpLoadFile
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: int32(code),
 			StatusMsg:  "token错误",
 		}
 	} else if time.Now().Unix() > claims.ExpiresAt {
 		code = e.ErrorAuthCheckTokenTimeout
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: int32(code),
 			StatusMsg:  "token超时",
 		}
@@ -143,14 +163,14 @@ func (service *FollowService) GetFollowerListByUId(token, userId string) ([]User
 	var followDao = repository.FollowRepository{}
 	num, err := strconv.ParseInt(userId, 10, 64)
 	if err != nil {
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: 400,
 			StatusMsg:  "参数解析失败",
 		}
 	}
 	res, err := followDao.GetFollowerListByUId(num)
 	if err != nil {
-		return nil, controller.Response{
+		return nil, Response{
 			StatusCode: 401,
 			StatusMsg:  err.Error() + ",数据库查询数据失败!",
 		}
@@ -168,7 +188,7 @@ func (service *FollowService) GetFollowerListByUId(token, userId string) ([]User
 		_, user.IsFollow = userDao.IsFollow(u.Id, num)
 		users = append(users, user)
 	}
-	return users, controller.Response{
+	return users, Response{
 		StatusCode: 0,
 		StatusMsg:  "获取成功",
 	}

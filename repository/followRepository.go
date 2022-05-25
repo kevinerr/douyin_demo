@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/pkg/util"
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -52,7 +53,7 @@ func cancel(userId, toUserId int64) bool {
 	tx := model.DB.Begin()
 
 	//删除关联
-	err := tx.Where("follower_id = ? and follower_id = ?", userId, toUserId).
+	err := tx.Where("follower_id = ? and follow_id = ?", userId, toUserId).
 		Delete(model.Follow{}).Error
 	if err != nil {
 		//回滚
@@ -60,19 +61,8 @@ func cancel(userId, toUserId int64) bool {
 		return false
 	}
 	//用户关注数处理
-	var u1, u2 model.User
-	if err = tx.Where("id = ?", userId).First(&u1).Error; err != nil {
-		//回滚
-		tx.Rollback()
-		return false
-	}
-	if err = tx.Where("id = ?", toUserId).First(&u2).Error; err != nil {
-		//回滚
-		tx.Rollback()
-		return false
-	}
-	err = tx.Model(&u1).UpdateColumns(model.User{FollowCount: u1.FollowCount - 1}).Error
-	err = tx.Model(&u2).UpdateColumns(model.User{FollowerCount: u2.FollowerCount - 1}).Error
+	err = tx.Model(&model.User{Id: userId}).Update("follow_count", gorm.Expr("follow_count - 1")).Error
+	err = tx.Model(&model.User{Id: toUserId}).Update("follower_count", gorm.Expr("follower_count - 1")).Error
 	if err != nil {
 		//回滚
 		tx.Rollback()
@@ -103,19 +93,8 @@ func ok(userId, toUserId int64) bool {
 		return false
 	}
 	//更新用户信息
-	var u1, u2 model.User
-	if err = tx.Where("id = ?", userId).First(&u1).Error; err != nil {
-		//回滚
-		tx.Rollback()
-		return false
-	}
-	if err = tx.Where("id = ?", toUserId).First(&u2).Error; err != nil {
-		//回滚
-		tx.Rollback()
-		return false
-	}
-	err = tx.Model(&u1).UpdateColumns(model.User{FollowCount: u1.FollowCount + 1}).Error
-	err = tx.Model(&u2).UpdateColumns(model.User{FollowerCount: u2.FollowerCount + 1}).Error
+	err = tx.Model(&model.User{Id: userId}).Update("follow_count", gorm.Expr("follow_count + 1")).Error
+	err = tx.Model(&model.User{Id: toUserId}).Update("follower_count", gorm.Expr("follower_count + 1")).Error
 	if err != nil {
 		//回滚
 		tx.Rollback()
