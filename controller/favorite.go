@@ -44,16 +44,14 @@ func FavoriteAction(c *gin.Context) {
 
 // FavoriteList all users have same favorite video list
 func FavoriteList(c *gin.Context) {
-	//var favoriteService service.FavoriteService
-	//
-	////获取参数
-	//token := c.Query("token")
-	//userId, _ := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	var favoriteService service.FavoriteService
 
-	c.JSON(http.StatusOK, VideoListResponse{
-		Response: Response{
-			StatusCode: 0,
-		},
-		VideoList: DemoVideos,
-	})
+	//获取参数
+	token := c.Query("token")
+	userId, _ := strconv.ParseInt(c.Query("user_id"), 10, 64)
+
+	// 获取点赞列表
+	res := favoriteService.GetFavorites(userId, token)
+
+	c.JSON(http.StatusOK, res)
 }

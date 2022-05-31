@@ -16,6 +16,12 @@ func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, acti
 	var favoriteRepository repository.FavoriteRepository
 	code := e.SUCCESS
 
+	//组合对象
+	favorite := &model.Favorite{
+		VideoId: videoId,
+		UserId:  userId,
+	}
+
 	/**
 	//身份判断
 	claims, err := util.ParseToken(token)
@@ -33,19 +39,31 @@ func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, acti
 	userId = claims.Id
 	*/
 
+	// 判断是否已点赞或者已经取消点赞
+	// 如果已经做了即不做处理
+	if actionType == 1 {
+		// 需要不存在
+		if favoriteRepository.SelectFavorite(favorite) {
+			code = e.SUCCESS
+			return serializer.FavoriteActionResponse{
+				Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
+			}
+		}
+	} else {
+		// 需要存在
+		if !favoriteRepository.SelectFavorite(favorite) {
+			code = e.SUCCESS
+			return serializer.FavoriteActionResponse{
+				Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
+			}
+		}
+	}
+
 	// TODO xietingyu redis + 定时任务实现
 	// TODO xietingyu 判断视频ID是否正常
 	// 视频点赞数++或--
 	videoRepository.AddVideoFavorite(videoId, actionType)
 	// 视频点赞表添加一条数据或者删除数据
-
-	//组合对象
-	favorite := &model.Favorite{
-		VideoId: videoId,
-		UserId:  userId,
-	}
-
-	//插库操作
 	if err := favoriteRepository.FavoriteAct(favorite, actionType); err != nil {
 		logging.Info(err)
 		code = e.ErrorDatabase
@@ -55,4 +73,10 @@ func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, acti
 	return serializer.FavoriteActionResponse{
 		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 	}
+}
+
+func (service *FavoriteService) GetFavorites(id int64, token string) interface{} {
+	var videos []model.Video2
+	repository.VideoRepository{}.GetFavoriteVideoList(id, &videos)
+	return videos
 }
