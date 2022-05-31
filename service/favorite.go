@@ -78,19 +78,19 @@ func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, acti
 func (service *FavoriteService) GetFavorites(userId int64, token string) interface{} {
 	code := e.SUCCESS
 	//身份判断
-	claims, err := util.ParseToken(token)
-	if err != nil {
-		code = e.ErrorAuthCheckTokenFail
-		return serializer.FavoriteActionResponse{
-			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		}
-	} else if time.Now().Unix() > claims.ExpiresAt {
-		code = e.ErrorAuthCheckTokenTimeout
-		return serializer.FavoriteActionResponse{
-			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		}
-	}
-	userId = claims.Id
+	//claims, err := util.ParseToken(token)
+	//if err != nil {
+	//	code = e.ErrorAuthCheckTokenFail
+	//	return serializer.FavoriteActionResponse{
+	//		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
+	//	}
+	//} else if time.Now().Unix() > claims.ExpiresAt {
+	//	code = e.ErrorAuthCheckTokenTimeout
+	//	return serializer.FavoriteActionResponse{
+	//		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
+	//	}
+	//}
+	//userId = claims.Id
 	var videos []serializer.Video
 	repository.VideoRepository{}.GetFavoriteVideoList(userId, &videos)
 	return serializer.FavoriteListResponse{
