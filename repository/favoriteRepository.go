@@ -14,7 +14,7 @@ func (c FavoriteRepository) SelectFavorite(favorite *model.Favorite) bool {
 }
 
 func (c FavoriteRepository) CreatFavorite(favorite *model.Favorite) error {
-	err := model.DB.Debug().Select("UserId", "VideoId").Create(favorite).Error
+	err := model.DB.Debug().Select("Id", "UserId", "VideoId", "CreateTime").Create(favorite).Error
 	return err
 }
 

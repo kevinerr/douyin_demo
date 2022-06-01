@@ -58,6 +58,10 @@ func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, acti
 			}
 		}
 	}
+	//雪花算法生成ID
+	snow := util.Snowflake{}
+	favorite.Id = snow.Generate()
+	favorite.CreateTime = time.Now()
 
 	// TODO xietingyu redis + 定时任务实现
 	// TODO xietingyu 判断视频ID是否正常
