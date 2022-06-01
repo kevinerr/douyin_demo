@@ -179,14 +179,7 @@ func (service *CommentService) CommentList(videoId int64, token string) serializ
 		//ifFollow判断
 		user, _ := userRepository.SelectById(comment.UserId) //评论者
 		authorId, _ := videoRepository.GetAuthorId(videoId)  //作者
-		var relationCount int8
-		model.DB.Table("follow").Where("follower_id=? AND follow_id=?", user.Id, authorId).Count(&relationCount) //TODO isFollow：待follow相关repository函数完善后调用来优化此处逻辑
-		var isFollow bool
-		if relationCount == 0 {
-			isFollow = false
-		} else {
-			isFollow = true
-		}
+		var _, isFollow = userRepository.IsFollow(user.Id, authorId)
 
 		userInfo := serializer.User{
 			Id:            user.Id,
