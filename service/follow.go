@@ -24,7 +24,7 @@ type User struct {
 }
 
 // RelationAction 关系操作
-func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeStr, token string) Response {
+func (service *FollowService) RelationAction(toUserIdStr, actionTypeStr, token string) Response {
 	//token验证
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	code := 0
@@ -42,7 +42,7 @@ func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeS
 		}
 	}
 	//参数解析
-	userId, err := strconv.ParseInt(userIdStr, 10, 64)
+	//userId, err := strconv.ParseInt(userIdStr, 10, 64)
 	toUserId, err := strconv.ParseInt(toUserIdStr, 10, 64)
 	actionType, err := strconv.ParseInt(actionTypeStr, 10, 32)
 	if err != nil {
@@ -59,7 +59,7 @@ func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeS
 		}
 	}
 	var userDao repository.UserRepository
-	if user, err := userDao.SelectById(userId); user == nil || err != nil {
+	if user, err := userDao.SelectById(claims.Id); user == nil || err != nil {
 		return Response{
 			StatusCode: 403,
 			StatusMsg:  "userId不存在",
@@ -74,7 +74,7 @@ func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeS
 
 	//进行数据库相关操作
 	var followDao repository.FollowRepository
-	flag := followDao.RelationAct(userId, toUserId, int32(actionType))
+	flag := followDao.RelationAct(claims.Id, toUserId, int32(actionType))
 	if !flag {
 		return Response{
 			StatusCode: 401,

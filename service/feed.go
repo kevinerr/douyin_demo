@@ -54,10 +54,12 @@ func (service *FeedService) VideoList(latestTime0 string, token string) serializ
 		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow}
 		videos[i].Author = userResp
 	}
-	next_time := res[0].CreateTime
+	next_time := res[len(res)-1].CreateTime
+	//fmt.Println(next_time)
+	//fmt.Println(next_time.Unix() - 3600*8)
 	return serializer.FeedResponse{
 		Response:  serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		VideoList: videos,
-		NextTime:  next_time.Unix(),
+		NextTime:  next_time.Unix() * 1000,
 	}
 }
