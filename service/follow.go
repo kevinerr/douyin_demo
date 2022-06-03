@@ -41,8 +41,9 @@ func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeS
 			StatusMsg:  "token超时",
 		}
 	}
+
 	//参数解析
-	userId, err := strconv.ParseInt(userIdStr, 10, 64)
+	userId := claims.Id
 	toUserId, err := strconv.ParseInt(toUserIdStr, 10, 64)
 	actionType, err := strconv.ParseInt(actionTypeStr, 10, 32)
 	if err != nil {
