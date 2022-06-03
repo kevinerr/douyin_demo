@@ -57,6 +57,6 @@ func (service *FeedService) VideoList(latestTime string, token string) serialize
 	return serializer.FeedResponse{
 		Response:  serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		VideoList: videos,
-		NextTime:  (next_time.Unix() - 3600*8) * 1000,
+		NextTime:  next_time.Unix() * 1000,
 	}
 }
