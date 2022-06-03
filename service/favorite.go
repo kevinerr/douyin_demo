@@ -59,6 +59,10 @@ func (service *FavoriteService) DisposeFavorite(userId int64, videoId int64, act
 			}
 		}
 	}
+	//雪花算法生成ID
+	snow := util.Snowflake{}
+	favorite.Id = snow.Generate()
+	favorite.CreateTime = time.Now()
 
 	if !videoRepository.CheckVideoAvailable(videoId) {
 		code = e.InvalidParams

@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/RaymondCode/simple-demo/conf"
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/pkg/util"
@@ -21,7 +22,7 @@ type PublishService struct {
 func (service *PublishService) Publish(token string, data *multipart.FileHeader, title string, c *gin.Context) serializer.Response {
 	var videoRepository repository.VideoRepository
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
-	code := e.SuccessUpLoadFile
+	code := e.SUCCESS
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
 		return serializer.Response{
@@ -49,7 +50,7 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 		Id:         snow.Generate(),
 		AuthorId:   claims.Id,
 		Title:      title,
-		PlayUrl:    "http://localhost:8080/static/" + finalName,
+		PlayUrl:    "http://" + conf.BaseUrl + "/static/" + finalName,
 		CoverUrl:   "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
 		CreateTime: time.Now(),
 	}
