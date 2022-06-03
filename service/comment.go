@@ -58,17 +58,13 @@ func (service *CommentService) CreateAction(videoId int64, token string, comment
 		}
 	}
 
+	//修改vedio信息
+	videoRepository.AddVideoComment(videoId, 1)
+
 	//ifFollow判断
 	user, _ := userRepository.SelectById(userId)        //评论者
 	authorId, _ := videoRepository.GetAuthorId(videoId) //作者
-	var relationCount int8
-	model.DB.Table("follow").Where("follower_id=? AND follow_id=?", user.Id, authorId).Count(&relationCount) //TODO isFollow：待follow相关repository函数完善后调用来优化此处逻辑
-	var isFollow bool
-	if relationCount == 0 {
-		isFollow = false
-	} else {
-		isFollow = true
-	}
+	var _, isFollow = userRepository.IsFollow(user.Id, authorId)
 
 	//组合回调信息
 	userContent := serializer.User{
@@ -95,6 +91,7 @@ func (service *CommentService) CreateAction(videoId int64, token string, comment
 
 func (service *CommentService) DeleteAction(commentId int64, token string) serializer.CommentActionResponse {
 	var commentRepository repository.CommentRepository
+	var videoRepository repository.VideoRepository
 	code := e.SUCCESS
 
 	//身份判断
@@ -127,6 +124,8 @@ func (service *CommentService) DeleteAction(commentId int64, token string) seria
 			}
 		}
 	}
+	
+	videoId, _ := commentRepository.GetVideoId(commentId)
 
 	//删除操作
 	if err := commentRepository.DeleteComment(commentId); err != nil {
@@ -136,6 +135,9 @@ func (service *CommentService) DeleteAction(commentId int64, token string) seria
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
+
+	//修改vedio信息
+	videoRepository.AddVideoComment(videoId, 2)
 
 	//返回
 	return serializer.CommentActionResponse{
