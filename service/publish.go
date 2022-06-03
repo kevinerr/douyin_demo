@@ -2,14 +2,15 @@ package service
 
 import (
 	"fmt"
-	"github.com/RaymondCode/simple-demo/conf"
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/pkg/util"
 	"github.com/RaymondCode/simple-demo/repository"
 	"github.com/RaymondCode/simple-demo/serializer"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
 	logging "github.com/sirupsen/logrus"
+	"io"
 	"mime/multipart"
 	"path/filepath"
 	"strconv"
@@ -21,8 +22,8 @@ type PublishService struct {
 
 func (service *PublishService) Publish(token string, data *multipart.FileHeader, title string, c *gin.Context) serializer.Response {
 	var videoRepository repository.VideoRepository
-	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	code := e.SUCCESS
+	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
 		return serializer.Response{
@@ -34,23 +35,43 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 			StatusCode: code, StatusMsg: e.GetMsg(code),
 		}
 	}
-	filename := filepath.Base(data.Filename)
-	userId := claims.Id
-	finalName := fmt.Sprintf("%d_%s", userId, filename)
-	saveFile := filepath.Join("./public/", finalName) //将文件存储到public文件夹中
-	if err := c.SaveUploadedFile(data, saveFile); err != nil {
+	snow := util.Snowflake{}
+	filename := strconv.Itoa(int(snow.Generate())) + "_" + filepath.Base(data.Filename)
+	src, err := data.Open()
+	if err != nil {
+		code = e.InvalidParams
+		return serializer.Response{
+			StatusCode: code, StatusMsg: e.GetMsg(code),
+		}
+	}
+
+	fileurl, err := OssUpload(filename, src)
+	if err != nil {
 		code = e.ErrorUpLoadFile
 		return serializer.Response{
 			StatusCode: code, StatusMsg: e.GetMsg(code),
 		}
 	}
+
+	// 2022 - 06- 03 上传到oss
+
+	/*
+		userId := claims.Id
+		finalName := fmt.Sprintf("%d_%s", userId, filename)
+		saveFile := filepath.Join("./public/", finalName) //将文件存储到public文件夹中
+		if err := c.SaveUploadedFile(data, saveFile); err != nil {
+			code = e.ErrorUpLoadFile
+			return serializer.Response{
+				StatusCode: code, StatusMsg: e.GetMsg(code),
+			}
+		}
+	*/
 	//雪花算法生成ID
-	snow := util.Snowflake{}
 	video := &model.Video{
 		Id:         snow.Generate(),
 		AuthorId:   claims.Id,
 		Title:      title,
-		PlayUrl:    "http://" + conf.BaseUrl + "/static/" + finalName,
+		PlayUrl:    fileurl,
 		CoverUrl:   "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
 		CreateTime: time.Now(),
 	}
@@ -99,4 +120,26 @@ func (service *PublishService) PublishList(userId string, token string) serializ
 		Response:  serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		VideoList: results,
 	}
+}
+
+func OssUpload(fileName string, file io.Reader) (string, error) {
+	endpoint := "oss-cn-shanghai.aliyuncs.com"
+	accessKey := "LTAI4GEi2cat7zLt37PSrixz"
+	secretKey := "6iNRN9bdVJKC5gyRJruWnIHlWrApH2"
+	client, err := oss.New(endpoint, accessKey, secretKey, oss.Timeout(10, 120))
+
+	if err != nil {
+		return "", err
+	}
+	// 获取存储空间
+	bucket, err := client.Bucket("paper-boot")
+	if err != nil {
+		return "", err
+	}
+	// 上传文件。
+	err = bucket.PutObject("test/"+fileName, file)
+	if err != nil {
+		return "", err
+	}
+	return "https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/" + fileName, nil
 }
