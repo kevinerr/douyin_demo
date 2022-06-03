@@ -29,6 +29,7 @@ func (service *UserService) Register() serializer.UserLoginResponse {
 		}
 	}
 	user.Username = service.UserName
+	user.Nickname = service.UserName
 	//加密密码
 	if err := user.SetPassword(service.Password); err != nil {
 		logging.Info(err)

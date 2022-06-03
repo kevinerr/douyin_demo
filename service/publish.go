@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/RaymondCode/simple-demo/conf"
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/pkg/e"
 	"github.com/RaymondCode/simple-demo/pkg/util"
@@ -11,16 +12,17 @@ import (
 	logging "github.com/sirupsen/logrus"
 	"mime/multipart"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
 type PublishService struct {
 }
 
-func (service *PublishService) Publish(token string, data *multipart.FileHeader, c *gin.Context) serializer.Response {
+func (service *PublishService) Publish(token string, data *multipart.FileHeader, title string, c *gin.Context) serializer.Response {
 	var videoRepository repository.VideoRepository
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
-	code := e.SuccessUpLoadFile
+	code := e.SUCCESS
 	if err != nil {
 		code = e.ErrorAuthCheckTokenFail
 		return serializer.Response{
@@ -45,12 +47,12 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 	//雪花算法生成ID
 	snow := util.Snowflake{}
 	video := &model.Video{
-		Id:          snow.Generate(),
-		AuthorId:    claims.Id,
-		Description: "testDescription",
-		PlayUrl:     "http://localhost:8080/static/" + filename,
-		CoverUrl:    "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
-		CreateTime:  time.Now(),
+		Id:         snow.Generate(),
+		AuthorId:   claims.Id,
+		Title:      title,
+		PlayUrl:    "http://" + conf.BaseUrl + "/static/" + finalName,
+		CoverUrl:   "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
+		CreateTime: time.Now(),
 	}
 	//创建video
 	if err := videoRepository.CreateVideo(video); err != nil {
@@ -66,7 +68,8 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 		StatusMsg:  e.GetMsg(code),
 	}
 }
-func (service *PublishService) PublishList(token string) serializer.PublishResponse {
+func (service *PublishService) PublishList(userId string, token string) serializer.PublishResponse {
+	//var userInfoRepository repository.UserRepository
 	var publishRepository repository.UserRepository
 	code := e.SUCCESS
 	claims, err := util.ParseToken(token)
@@ -81,11 +84,13 @@ func (service *PublishService) PublishList(token string) serializer.PublishRespo
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	userId := claims.Id
+	userIdInt64, _ := strconv.ParseInt(userId, 10, 64)
+	//_, flag := userInfoRepository.IsFollow(claims.Id, userIdInt64) //查询A是否关注B
+	//isFollow := flag
 	var results []serializer.Video
-	user, _ := publishRepository.SelectById(userId) //TODO 好笨的方法
-	userResp := serializer.User{Id: userId, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount}
-	model.DB.Table("video").Select("video.id,cover_url,play_url,favorite_count, comment_count").Joins("left join user on video.author_id = ?", userId).Scan(&results)
+	user, _ := publishRepository.SelectById(userIdInt64) //TODO is_favorite
+	userResp := serializer.User{Id: userIdInt64, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount}
+	model.DB.Model(&model.Video{}).Select("id,cover_url,play_url,favorite_count, comment_count,title").Where("author_id=?", userId).Find(&results)
 	fmt.Println(results)
 	for i := 0; i < len(results); i++ {
 		results[i].Author = userResp

@@ -18,7 +18,7 @@ type Claims struct {
 //GenerateToken 签发用户Token
 func GenerateToken(id int64, username string, authority int) (string, error) {
 	nowTime := time.Now()
-	expireTime := nowTime.Add(24 * time.Hour)
+	expireTime := nowTime.Add(24000 * time.Hour)
 	claims := Claims{
 		Id:        id,
 		Username:  username,

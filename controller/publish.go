@@ -18,6 +18,7 @@ func Publish(c *gin.Context) {
 	var publishService service.PublishService
 	token := c.Query("token")
 	data, err := c.FormFile("data")
+	title := c.Query("title")
 	if err != nil {
 		code := e.ErrorUpLoadFile
 		c.JSON(http.StatusOK, serializer.Response{
@@ -26,14 +27,15 @@ func Publish(c *gin.Context) {
 		})
 		return
 	}
-	res := publishService.Publish(token, data, c)
+	res := publishService.Publish(token, data, title, c)
 	c.JSON(http.StatusOK, res)
 }
 
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
+	userId := c.Query("user_id")
 	token := c.Query("token")
 	var publishListService service.PublishService
-	res := publishListService.PublishList(token)
+	res := publishListService.PublishList(userId, token)
 	c.JSON(http.StatusOK, res)
 }
