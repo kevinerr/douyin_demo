@@ -4,6 +4,7 @@ const (
 	SUCCESS       = 0
 	ERROR         = 500
 	InvalidParams = 400
+	UNDOSUCCESS   = 1
 
 	//成员错误
 	ErrorExistUser      = 10002

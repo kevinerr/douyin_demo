@@ -20,6 +20,7 @@ func (service *FeedService) VideoList(latestTime0 string, token string) serializ
 	latestTime := latestTime0[0:10]
 	fmt.Println(latestTime)
 	var userRepository repository.UserRepository
+	var favoriteRepository repository.FavoriteRepository
 	code := e.SUCCESS
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	if err != nil {
@@ -46,9 +47,10 @@ func (service *FeedService) VideoList(latestTime0 string, token string) serializ
 		videos[i].PlayUrl = res[i].PlayUrl
 		videos[i].FavoriteCount = res[i].FavoriteCount
 		videos[i].CommentCount = res[i].CommentCount
-		videos[i].IsFavorite = false //TODO
+		videos[i].IsFavorite = favoriteRepository.IsFavorite(res[i].Id, claims.Id)
 		videos[i].Title = res[i].Title
-		_, isFollow := userRepository.IsFollow(claims.Id, user.Id)
+		_, isFollow := userRepository.IsFollow(claims.Id, res[i].AuthorId)
+		fmt.Println(claims.Id, res[i].AuthorId)
 		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow}
 		videos[i].Author = userResp
 	}

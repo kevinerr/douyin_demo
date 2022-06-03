@@ -13,7 +13,8 @@ import (
 type FavoriteService struct {
 }
 
-func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, actionType int32, token string) serializer.FavoriteActionResponse {
+func (service *FavoriteService) DisposeFavorite(userId int64, videoId int64, actionType int32, token string) serializer.FavoriteActionResponse {
+
 	var videoRepository repository.VideoRepository
 	var favoriteRepository repository.FavoriteRepository
 	code := e.SUCCESS
@@ -42,27 +43,30 @@ func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, acti
 	// 判断是否已点赞或者已经取消点赞
 	// 如果已经做了即不做处理
 	if actionType == 1 {
-		// 需要不存在
+		// 点赞操作
 		if favoriteRepository.SelectFavorite(favorite) {
-			code = e.SUCCESS
+			code = e.UNDOSUCCESS
 			return serializer.FavoriteActionResponse{
 				Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 			}
 		}
 	} else {
-		// 需要存在
+		// 删除点赞操作
 		if !favoriteRepository.SelectFavorite(favorite) {
-			code = e.SUCCESS
+			code = e.UNDOSUCCESS
 			return serializer.FavoriteActionResponse{
 				Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 			}
 		}
 	}
 
-	// TODO xietingyu redis + 定时任务实现
-	// TODO xietingyu 判断视频ID是否正常
-	// 视频点赞数++或--
-	videoRepository.AddVideoFavorite(videoId, actionType)
+	if !videoRepository.CheckVideoAvailable(videoId) {
+		code = e.InvalidParams
+		return serializer.FavoriteActionResponse{
+			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
+		}
+	}
+
 	// 视频点赞表添加一条数据或者删除数据
 	if err := favoriteRepository.FavoriteAct(favorite, actionType); err != nil {
 		logging.Info(err)
@@ -70,27 +74,18 @@ func (service *FavoriteService) CreateFavorite(userId int64, videoId int64, acti
 	} else {
 		code = e.SUCCESS
 	}
+
+	// 视频点赞数++或--
+	videoRepository.AddVideoFavorite(videoId, actionType)
+
 	return serializer.FavoriteActionResponse{
 		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 	}
 }
 
-func (service *FavoriteService) GetFavorites(userId int64, token string) interface{} {
+func (service *FavoriteService) GetFavorites(userId int64) interface{} {
 	code := e.SUCCESS
-	//身份判断
-	//claims, err := util.ParseToken(token)
-	//if err != nil {
-	//	code = e.ErrorAuthCheckTokenFail
-	//	return serializer.FavoriteActionResponse{
-	//		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-	//	}
-	//} else if time.Now().Unix() > claims.ExpiresAt {
-	//	code = e.ErrorAuthCheckTokenTimeout
-	//	return serializer.FavoriteActionResponse{
-	//		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-	//	}
-	//}
-	//userId = claims.Id
+
 	var videos []serializer.Video
 	repository.VideoRepository{}.GetFavoriteVideoList(userId, &videos)
 	return serializer.FavoriteListResponse{

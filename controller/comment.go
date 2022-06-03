@@ -27,7 +27,7 @@ func CommentAction(c *gin.Context) {
 	commentId, _ := strconv.ParseInt(c.Query("comment_id"), 10, 64)
 	actionType, _ := strconv.ParseInt(c.Query("action_type"), 10, 32)
 
-	log.Println(userId) //这个参数就没啥用
+	log.Println(userId) //无用参数
 
 	//参数检查
 	if actionType != 1 && actionType != 2 {
