@@ -3,7 +3,7 @@ package repository
 import (
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/serializer"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type VideoRepository struct {
@@ -37,15 +37,26 @@ func (c VideoRepository) AddVideoFavorite(videoId int64, actionType int32) {
 	model.DB.Model(&video).UpdateColumn("favorite_count", gorm.Expr(expression, 1))
 }
 
+func (c VideoRepository) AddVideoComment(videoId int64, actionType int32) {
+	var video model.Video
+	video.Id = videoId
+	var expression string
+	if actionType == 1 {
+		expression = "comment_count + ?"
+	} else if actionType == 2 {
+		expression = "comment_count - ?"
+	}
+	model.DB.Model(&video).Where("id = ?", videoId).UpdateColumn("comment_count", gorm.Expr(expression, 1))
+}
+
 func (c VideoRepository) GetFavoriteVideoList(userId int64, videos *[]serializer.Video) {
-	// TODO 折腾了好久搞不懂GORM的多表联查，先用最蠢笨的办法
 	var favoriteRepo FavoriteRepository
 	var videoRepo VideoRepository
 	// 查favorite list
 	var favorites []model.Favorite
 	favoriteRepo.FavoriteList(userId, &favorites)
 	for i := range favorites {
-		// 分别查每个vℹ️deo
+		// 分别查每个video
 		user := serializer.User{}
 		video := serializer.Video{
 			Author: user,
@@ -71,4 +82,10 @@ func (c VideoRepository) GetVideoById(videoId int64, video *serializer.Video) {
 		video.Author.FollowerCount = user.FollowCount
 		video.Author.FollowCount = user.FollowCount
 	}
+}
+
+func (c VideoRepository) CheckVideoAvailable(videoId int64) bool {
+	var count int64
+	model.DB.Table("video").Where("id = ?", videoId).Count(&count)
+	return count != 0
 }

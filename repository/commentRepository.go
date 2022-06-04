@@ -13,6 +13,13 @@ func (c CommentRepository) CreatComment(comment *model.Comment) error {
 	return err
 }
 
+//get video id by comment id
+func (c CommentRepository) GetVideoId(commentId int64) (videoId int64, err error) {
+	comment := model.Comment{}
+	err = model.DB.Where("id=?", commentId).First(&comment).Error
+	return comment.VideoId, err
+}
+
 //delete one comment
 func (c CommentRepository) DeleteComment(commentId int64) error {
 	comment := model.Comment{Id: commentId}

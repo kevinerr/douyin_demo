@@ -8,3 +8,7 @@ type Favorite struct {
 	VideoId    int64     `gorm:"column:video_id"`    //点赞视频的ID
 	CreateTime time.Time `gorm:"column:create_time"` //点赞时间
 }
+
+func (Favorite) TableName() string {
+	return "favorite"
+}

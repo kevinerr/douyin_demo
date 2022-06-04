@@ -15,6 +15,10 @@ type Video struct {
 	CreateTime    time.Time `gorm:"column:create_time"`    //视频创建时间
 }
 
+func (Video) TableName() string {
+	return "video"
+}
+
 // 用于视频与作者一对一查询
 type Video2 struct {
 	Id            int64     `gorm:"column:id"`             //视频ID
