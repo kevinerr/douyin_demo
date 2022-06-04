@@ -72,7 +72,7 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 		AuthorId:   claims.Id,
 		Title:      title,
 		PlayUrl:    fileurl,
-		CoverUrl:   "https://cdn.pixabay.com/photo/2016/03/27/18/10/bear-1283347_1280.jpg",
+		CoverUrl:   "https://api.kdcc.cn/img/rand.php",
 		CreateTime: time.Now(),
 	}
 	//创建video
