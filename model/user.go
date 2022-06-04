@@ -22,6 +22,11 @@ type User struct {
 	FollowerCount int64  `gorm:"column:follower_count"` //粉丝总数
 }
 
+// TableName 会将 User 的表名重写为 `user`
+func (User) TableName() string {
+	return "user"
+}
+
 const (
 	PassWordCost = 12 //密码加密难度
 )

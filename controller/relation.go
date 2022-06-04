@@ -14,12 +14,12 @@ type FollowListResponse struct {
 // RelationAction no practical effect, just check if token is valid
 func RelationAction(c *gin.Context) {
 	token := c.Query("token")
-	userId := c.Query("user_id")
+	//userId := c.Query("user_id")
 	toUserId := c.Query("to_user_id")
 	actionType := c.Query("action_type")
 	var followService service.FollowService
 	var res service.Response
-	res = followService.RelationAction(userId, toUserId, actionType, token)
+	res = followService.RelationAction(toUserId, actionType, token)
 	//返回有结构体没有数组 BUG 字段没有首字母大写导致的
 	c.JSON(http.StatusOK, res)
 }

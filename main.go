@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/RaymondCode/simple-demo/conf"
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,7 @@ func main() { // http://localhost:8080/swagger/index.html
 	initRouter(r)
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	fmt.Println("ok running~")
 }
 
 //func main() {

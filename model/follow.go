@@ -8,3 +8,7 @@ type Follow struct {
 	FollowId   int64     `gorm:"column:follow_id"`   //被关注用户ID
 	CreateTime time.Time `gorm:"column:create_time"` //关注记录时间
 }
+
+func (Follow) TableName() string {
+	return "follow"
+}

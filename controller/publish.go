@@ -16,9 +16,9 @@ type VideoListResponse struct {
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
 	var publishService service.PublishService
-	token := c.Query("token")
+	token := c.PostForm("token")
 	data, err := c.FormFile("data")
-	title := c.Query("title")
+	title := c.PostForm("title")
 	if err != nil {
 		code := e.ErrorUpLoadFile
 		c.JSON(http.StatusOK, serializer.Response{

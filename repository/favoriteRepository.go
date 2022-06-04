@@ -10,13 +10,13 @@ type FavoriteRepository struct {
 }
 
 func (c FavoriteRepository) SelectFavorite(favorite *model.Favorite) bool {
-	var count int
+	var count int64
 	model.DB.Table("favorite").Where("video_id = ? and user_id = ?", favorite.VideoId, favorite.UserId).Count(&count)
 	return count != 0
 }
 
 func (c FavoriteRepository) IsFavorite(vedioId int64, userId int64) bool {
-	var count int
+	var count int64
 	model.DB.Table("favorite").Where("video_id = ? and user_id = ?", vedioId, userId).Count(&count)
 	return count != 0
 }

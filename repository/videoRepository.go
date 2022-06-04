@@ -3,7 +3,7 @@ package repository
 import (
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/serializer"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type VideoRepository struct {
@@ -85,7 +85,7 @@ func (c VideoRepository) GetVideoById(videoId int64, video *serializer.Video) {
 }
 
 func (c VideoRepository) CheckVideoAvailable(videoId int64) bool {
-	var count int
+	var count int64
 	model.DB.Table("video").Where("id = ?", videoId).Count(&count)
 	return count != 0
 }

@@ -24,7 +24,7 @@ type User struct {
 }
 
 // RelationAction 关系操作
-func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeStr, token string) Response {
+func (service *FollowService) RelationAction(toUserIdStr, actionTypeStr, token string) Response {
 	//token验证
 	claims, err := util.ParseToken(token) //token判断查询者是否登录
 	code := 0
@@ -41,8 +41,9 @@ func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeS
 			StatusMsg:  "token超时",
 		}
 	}
+
 	//参数解析
-	userId, err := strconv.ParseInt(userIdStr, 10, 64)
+	userId := claims.Id
 	toUserId, err := strconv.ParseInt(toUserIdStr, 10, 64)
 	actionType, err := strconv.ParseInt(actionTypeStr, 10, 32)
 	if err != nil {
@@ -52,6 +53,14 @@ func (service *FollowService) RelationAction(userIdStr, toUserIdStr, actionTypeS
 		}
 	}
 	//校验一下合理性
+	//不能自己关注自己
+	if toUserId == userId {
+		return Response{
+			StatusCode: 405,
+			StatusMsg:  "不能自己关注自己",
+		}
+	}
+	//操作类型要保证
 	if actionType != 1 && actionType != 2 {
 		return Response{
 			StatusCode: 402,

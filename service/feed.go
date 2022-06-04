@@ -16,9 +16,7 @@ type FeedService struct {
 
 var timeLayoutStr = "2006-01-02 15:04:05"
 
-func (service *FeedService) VideoList(latestTime0 string, token string) serializer.FeedResponse {
-	latestTime := latestTime0[0:10]
-	fmt.Println(latestTime)
+func (service *FeedService) VideoList(latestTime string, token string) serializer.FeedResponse {
 	var userRepository repository.UserRepository
 	var favoriteRepository repository.FavoriteRepository
 	code := e.SUCCESS
@@ -54,10 +52,17 @@ func (service *FeedService) VideoList(latestTime0 string, token string) serializ
 		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow}
 		videos[i].Author = userResp
 	}
-	next_time := res[0].CreateTime
+
+	next_time := res[len(res)-1].CreateTime
+	//fmt.Println(next_time)
+	//fmt.Println(next_time.Unix() - 3600*8)
+
+	//next_time := res[1].CreateTime
+	fmt.Println("返回的视频集最早时间：", (next_time.Unix()-3600*8)*1000, time.Unix(next_time.Unix()-3600*8, 0).Format(timeLayoutStr))
+
 	return serializer.FeedResponse{
 		Response:  serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		VideoList: videos,
-		NextTime:  next_time.Unix(),
+		NextTime:  next_time.Unix() * 1000,
 	}
 }

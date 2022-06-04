@@ -124,7 +124,7 @@ func (service *CommentService) DeleteAction(commentId int64, token string) seria
 			}
 		}
 	}
-	
+
 	videoId, _ := commentRepository.GetVideoId(commentId)
 
 	//删除操作

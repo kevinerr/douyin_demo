@@ -9,3 +9,7 @@ type Comment struct {
 	Content    string    `gorm:"column:content"`     //评论内容
 	CreateTime time.Time `gorm:"column:create_time"` //评论时间
 }
+
+func (Comment) TableName() string {
+	return "comment"
+}
