@@ -43,6 +43,7 @@ func (service *FollowService) RelationAction(toUserIdStr, actionTypeStr, token s
 	}
 
 	//参数解析
+	userId := claims.Id
 	toUserId, err := strconv.ParseInt(toUserIdStr, 10, 64)
 	actionType, err := strconv.ParseInt(actionTypeStr, 10, 32)
 	if err != nil {
@@ -52,6 +53,14 @@ func (service *FollowService) RelationAction(toUserIdStr, actionTypeStr, token s
 		}
 	}
 	//校验一下合理性
+	//不能自己关注自己
+	if toUserId == userId {
+		return Response{
+			StatusCode: 405,
+			StatusMsg:  "不能自己关注自己",
+		}
+	}
+	//操作类型要保证
 	if actionType != 1 && actionType != 2 {
 		return Response{
 			StatusCode: 402,
@@ -59,7 +68,7 @@ func (service *FollowService) RelationAction(toUserIdStr, actionTypeStr, token s
 		}
 	}
 	var userDao repository.UserRepository
-	if user, err := userDao.SelectById(claims.Id); user == nil || err != nil {
+	if user, err := userDao.SelectById(userId); user == nil || err != nil {
 		return Response{
 			StatusCode: 403,
 			StatusMsg:  "userId不存在",
@@ -74,7 +83,7 @@ func (service *FollowService) RelationAction(toUserIdStr, actionTypeStr, token s
 
 	//进行数据库相关操作
 	var followDao repository.FollowRepository
-	flag := followDao.RelationAct(claims.Id, toUserId, int32(actionType))
+	flag := followDao.RelationAct(userId, toUserId, int32(actionType))
 	if !flag {
 		return Response{
 			StatusCode: 401,
