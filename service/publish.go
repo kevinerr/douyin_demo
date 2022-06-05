@@ -87,7 +87,7 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 		WithOutput(reader, os.Stdout).
 		Run()
 	if err != nil {
-		logging.Info(err)
+		logging.Error(err)
 	}
 	//封面上传到oss
 	covername := strconv.Itoa(int(snow.Generate())) + ".jpeg"
