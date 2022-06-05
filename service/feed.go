@@ -11,9 +11,19 @@ import (
 	"time"
 )
 
+//-------------------------------------------------------
+//项目结构路径：/service/feed.go
+//创建者：贺凯恒
+//审查者：杭朋洁
+//创建时间：2022/5/25
+//描述：feed（视频流）功能相关的service层
+//Copyright2022
+//--------------------------------------------------------
+
 type FeedService struct {
 }
 
+// 时间格式
 var timeLayoutStr = "2006-01-02 15:04:05"
 
 func (service *FeedService) VideoList(latestTime string, token string) serializer.FeedResponse {

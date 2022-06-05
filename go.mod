@@ -3,6 +3,7 @@ module github.com/RaymondCode/simple-demo
 go 1.17
 
 require (
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.4+incompatible
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.7
 	github.com/jinzhu/gorm v1.9.16
@@ -12,11 +13,13 @@ require (
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
 	gopkg.in/ini.v1 v1.66.4
 	gopkg.in/yaml.v2 v2.4.0
+	gorm.io/driver/mysql v1.3.4
+	gorm.io/gorm v1.23.5
 )
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/aliyun/aliyun-oss-go-sdk v2.2.4+incompatible // indirect
+	github.com/baiyubin/aliyun-sts-go-sdk v0.0.0-20180326062324-cfa1a18b161f // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
@@ -36,6 +39,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/swaggo/swag v1.8.1 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
@@ -44,6 +48,4 @@ require (
 	golang.org/x/time v0.0.0-20220411224347-583f2d630306 // indirect
 	golang.org/x/tools v0.1.10 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
-	gorm.io/driver/mysql v1.3.4 // indirect
-	gorm.io/gorm v1.23.5 // indirect
 )

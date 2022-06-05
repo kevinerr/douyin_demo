@@ -10,9 +10,19 @@ import (
 	"time"
 )
 
+//-------------------------------------------------------
+//项目结构路径：/service/comment.go
+//创建者：祁盼
+//审查者：杭朋洁
+//创建时间：2022/5/25
+//描述：评论功能相关的service层
+//Copyright2022
+//--------------------------------------------------------
+
 type CommentService struct {
 }
 
+// 时间格式
 var commentTimeLayoutStr = "01-02"
 
 func (service *CommentService) CreateAction(videoId int64, token string, commentText string) serializer.CommentActionResponse {

@@ -10,12 +10,35 @@ import (
 	"strconv"
 )
 
+//-------------------------------------------------------
+//项目结构路径：/controller/comment.go
+//创建者：祁盼
+//审查者：杭朋洁
+//创建时间：2022/5/25
+//描述：评论功能相关的controller层
+//Copyright2022
+//--------------------------------------------------------
+
 type CommentListResponse struct {
 	Response
 	CommentList []Comment `json:"comment_list,omitempty"`
 }
 
-// CommentAction
+/*
+	接口地址：/controller/comment.CommentAction
+	功能描述：登录用户对视频进行评论
+	参数：
+		param token 登陆的用户
+		param comment_text 用户填写的评论内容，当action_type=1的时候使用
+		param video_id 视频的id
+		param user_id 用户id
+		param comment_id 要删除的评论id，在action_type=2的时候使用
+		param action_type 1-发布评论，2-删除评论
+	请求方式：POST
+	作者：祁盼
+	创建时间：2022/5/25
+	Copyright2022
+*/
 func CommentAction(c *gin.Context) {
 	var commentService service.CommentService
 
@@ -49,7 +72,17 @@ func CommentAction(c *gin.Context) {
 	}
 }
 
-// CommentList
+/*
+	接口地址：/controller/comment.CommentList
+	功能描述：获取视频的评论信息，按发布时间倒叙排序
+	参数：
+		param token 登陆的用户
+		param video_id 视频的id
+	请求方式：GET
+	作者：祁盼
+	创建时间：2022/5/25
+	Copyright2022
+*/
 func CommentList(c *gin.Context) {
 	var commentService service.CommentService
 

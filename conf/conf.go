@@ -18,6 +18,7 @@ var (
 	DbName     string
 )
 
+// Init 初始化配置
 func Init() {
 	file, err := ini.Load("./conf/config.ini")
 	if err != nil {
