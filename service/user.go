@@ -11,6 +11,15 @@ import (
 	"time"
 )
 
+//-------------------------------------------------------
+//项目结构路径：/service/user.go
+//创建者：贺凯恒
+//审查者：杭朋洁
+//创建时间：2022/5/25
+//描述：用户登录、注册功能相关的service层
+//Copyright2022
+//--------------------------------------------------------
+
 //UserRegisterService 用户服务
 type UserService struct {
 	UserName string `form:"username" json:"username"`

@@ -6,12 +6,32 @@ import (
 	"net/http"
 )
 
+//-------------------------------------------------------
+//项目结构路径：/controller/relation.go
+//创建者：林叶润
+//审查者：杭朋洁
+//创建时间：2022/5/25
+//描述：用户关系功能相关的controller层
+//Copyright2022
+//--------------------------------------------------------
+
 type FollowListResponse struct {
 	service.Response
 	UserList []service.User `json:"user_list"`
 }
 
-// RelationAction no practical effect, just check if token is valid
+/*
+	接口地址：/controller/relation.RelationAction
+	功能描述：登录用户对其他用户进行关注/取消关注操作
+	参数：
+		param token 登陆的用户
+		param to_user_id 其他用户id
+		param action_type 操作 1-关注，2-取消关注
+	请求方式：POST
+	作者：林叶润
+	创建时间：2022/5/25
+	Copyright2022
+*/
 func RelationAction(c *gin.Context) {
 	token := c.Query("token")
 	//userId := c.Query("user_id")
@@ -24,7 +44,17 @@ func RelationAction(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// GetFollowListByUId FollowList all users have same follow list
+/*
+	接口地址：/controller/relation.GetFollowListByUId
+	功能描述：用户关注的所有用户列表
+	参数：
+		param token 登陆的用户
+		param user_id 用户id
+	请求方式：GET
+	作者：林叶润
+	创建时间：2022/5/25
+	Copyright2022
+*/
 func GetFollowListByUId(c *gin.Context) {
 	token := c.Query("token")
 	userId := c.Query("user_id")
@@ -34,6 +64,17 @@ func GetFollowListByUId(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+/*
+	接口地址：/controller/relation.GetFollowerListByUId
+	功能描述：用户所有的粉丝列表
+	参数：
+		param token 登陆的用户
+		param user_id 用户id
+	请求方式：GET
+	作者：林叶润
+	创建时间：2022/5/25
+	Copyright2022
+*/
 // GetFollowerListByUId FollowerList all users have same follower list
 func GetFollowerListByUId(c *gin.Context) {
 	token := c.Query("token")
