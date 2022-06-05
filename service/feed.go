@@ -30,21 +30,21 @@ func (service *FeedService) VideoList(latestTime string, token string) serialize
 	var userRepository repository.UserRepository
 	var favoriteRepository repository.FavoriteRepository
 	code := e.SUCCESS
-	claims, err := util.ParseToken(token) //token判断查询者是否登录
-	if err != nil {
-		code = e.ErrorAuthCheckTokenFail
-		return serializer.FeedResponse{
-			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		}
-	} else if time.Now().Unix() > claims.ExpiresAt {
+	var isLogin bool
+	claims, err := util.ParseToken(token) //token判断查询者是否登录（可不登录）
+	if err != nil {                       //未登录
+		isLogin = false
+	} else if time.Now().Unix() > claims.ExpiresAt { //token过期
 		code = e.ErrorAuthCheckTokenTimeout
 		return serializer.FeedResponse{
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
+	} else { //已登录
+		isLogin = true
 	}
 	var videos = make([]serializer.Video, 2) //TODO,单次最多返回的视频个数
 	var res []model.Video
-	int64latestTime, err := strconv.ParseInt(latestTime, 10, 64)                                                 //将string时间戳转化为int64时间戳
+	int64latestTime, _ := strconv.ParseInt(latestTime, 10, 64)                                                   //将string时间戳转化为int64时间戳
 	timeStr := time.Unix(int64latestTime, 0).Format(timeLayoutStr)                                               //将int64时间戳装换成是string时间
 	model.DB.Model(&model.Video{}).Where("create_time<?", timeStr).Limit(2).Order("create_time DESC").Find(&res) //返回按投稿时间小于timeStr的视频
 	fmt.Println(res)
@@ -55,10 +55,15 @@ func (service *FeedService) VideoList(latestTime string, token string) serialize
 		videos[i].PlayUrl = res[i].PlayUrl
 		videos[i].FavoriteCount = res[i].FavoriteCount
 		videos[i].CommentCount = res[i].CommentCount
-		videos[i].IsFavorite = favoriteRepository.IsFavorite(res[i].Id, claims.Id)
 		videos[i].Title = res[i].Title
-		_, isFollow := userRepository.IsFollow(claims.Id, res[i].AuthorId)
-		fmt.Println(claims.Id, res[i].AuthorId)
+		var isFollow bool
+		if isLogin == false { //未登录
+			videos[i].IsFavorite = false
+			isFollow = false
+		} else { //已登陆
+			videos[i].IsFavorite = favoriteRepository.IsFavorite(res[i].Id, claims.Id)
+			_, isFollow = userRepository.IsFollow(claims.Id, res[i].AuthorId)
+		}
 		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow}
 		videos[i].Author = userResp
 	}
