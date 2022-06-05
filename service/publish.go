@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/RaymondCode/simple-demo/model"
 	"github.com/RaymondCode/simple-demo/pkg/e"
@@ -10,8 +11,10 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gin-gonic/gin"
 	logging "github.com/sirupsen/logrus"
+	ffmpeg "github.com/u2takey/ffmpeg-go"
 	"io"
 	"mime/multipart"
+	"os"
 	"path/filepath"
 	"strconv"
 	"time"
@@ -61,27 +64,53 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 			StatusCode: code, StatusMsg: e.GetMsg(code),
 		}
 	}
-
 	// 2022 - 06- 03 上传到oss
 
 	/*
-		userId := claims.Id
-		finalName := fmt.Sprintf("%d_%s", userId, filename)
-		saveFile := filepath.Join("./public/", finalName) //将文件存储到public文件夹中
-		if err := c.SaveUploadedFile(data, saveFile); err != nil {
-			code = e.ErrorUpLoadFile
-			return serializer.Response{
-				StatusCode: code, StatusMsg: e.GetMsg(code),
-			}
+	* @Author: starine
+	* @Date:   2022/6/5 16:19
+	* @Description: 使用ffmpeg读取视频流中的第一帧作为封面。
+	 */
+	//先存入本地public文件夹
+	saveFile := filepath.Join("./public/", filename) //将文件存储到public文件夹中
+	if err := c.SaveUploadedFile(data, saveFile); err != nil {
+		code = e.ErrorUpLoadFile
+		return serializer.Response{
+			StatusCode: code, StatusMsg: e.GetMsg(code),
 		}
-	*/
+	}
+	//使用ffmpeg从public文件中读取
+	reader := bytes.NewBuffer(nil)
+	err = ffmpeg.Input(saveFile).
+		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", 1)}).
+		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
+		WithOutput(reader, os.Stdout).
+		Run()
+	if err != nil {
+		logging.Info(err)
+	}
+	//封面上传到oss
+	covername := strconv.Itoa(int(snow.Generate())) + ".jpeg"
+	coverurl, err := OssUpload(covername, reader)
+	if err != nil {
+		code = e.ErrorUpLoadFile
+		return serializer.Response{
+			StatusCode: code, StatusMsg: e.GetMsg(code),
+		}
+	}
+	//删除本地public中的视频
+	err = os.Remove(saveFile)
+	if err != nil {
+		logging.Info(err)
+	}
+
 	//雪花算法生成ID
 	video := &model.Video{
 		Id:         snow.Generate(),
 		AuthorId:   claims.Id,
 		Title:      title,
 		PlayUrl:    fileurl,
-		CoverUrl:   "https://api.kdcc.cn/img/rand.php",
+		CoverUrl:   coverurl,
 		CreateTime: time.Now(),
 	}
 	//创建video
