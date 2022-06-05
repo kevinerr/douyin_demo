@@ -22,7 +22,7 @@ import (
 type FavoriteService struct {
 }
 
-func (service *FavoriteService) DisposeFavorite(userId int64, videoId int64, actionType int32, token string) serializer.FavoriteActionResponse {
+func (service *FavoriteService) DisposeFavorite(userId int64, videoId int64, actionType int32, claims *util.Claims) serializer.FavoriteActionResponse {
 
 	var videoRepository repository.VideoRepository
 	var favoriteRepository repository.FavoriteRepository
@@ -34,19 +34,7 @@ func (service *FavoriteService) DisposeFavorite(userId int64, videoId int64, act
 		UserId:  userId,
 	}
 
-	//身份判断
-	claims, err := util.ParseToken(token)
-	if err != nil {
-		code = e.ErrorAuthCheckTokenFail
-		return serializer.FavoriteActionResponse{
-			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		}
-	} else if time.Now().Unix() > claims.ExpiresAt {
-		code = e.ErrorAuthCheckTokenTimeout
-		return serializer.FavoriteActionResponse{
-			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		}
-	}
+	//获取身份
 	userId = claims.Id
 
 	// 判断是否已点赞或者已经取消点赞

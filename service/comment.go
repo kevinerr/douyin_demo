@@ -161,19 +161,24 @@ func (service *CommentService) CommentList(videoId int64, token string) serializ
 	var videoRepository repository.VideoRepository
 	code := e.SUCCESS
 
-	//判断身份
-	claims, err := util.ParseToken(token)
-	if err != nil {
-		code = e.ErrorAuthCheckTokenFail
-		return serializer.CommentListResponse{
-			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		}
-	} else if time.Now().Unix() > claims.ExpiresAt {
-		code = e.ErrorAuthCheckTokenTimeout
-		return serializer.CommentListResponse{
-			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
-		}
-	}
+	/*
+		Time：20220605
+		Author：祁盼
+		Action：根据APP逻辑，讨论后决定关闭commentList接口鉴权操作
+	*/
+	////判断身份
+	//claims, err := util.ParseToken(token)
+	//if err != nil {
+	//	code = e.ErrorAuthCheckTokenFail
+	//	return serializer.CommentListResponse{
+	//		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
+	//	}
+	//} else if time.Now().Unix() > claims.ExpiresAt {
+	//	code = e.ErrorAuthCheckTokenTimeout
+	//	return serializer.CommentListResponse{
+	//		Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
+	//	}
+	//}
 
 	//查询操作
 	var comments []model.Comment

@@ -98,9 +98,10 @@ func (service *PublishService) Publish(token string, data *multipart.FileHeader,
 		StatusMsg:  e.GetMsg(code),
 	}
 }
-func (service *PublishService) PublishList(userId string, token string) serializer.PublishResponse {
+func (service *PublishService) PublishList(authorId string, token string) serializer.PublishResponse {
 	//var userInfoRepository repository.UserRepository
 	var publishRepository repository.UserRepository
+	var favoriteRepository repository.FavoriteRepository
 	code := e.SUCCESS
 	claims, err := util.ParseToken(token)
 	if err != nil {
@@ -114,16 +115,17 @@ func (service *PublishService) PublishList(userId string, token string) serializ
 			Response: serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},
 		}
 	}
-	userIdInt64, _ := strconv.ParseInt(userId, 10, 64)
-	//_, flag := userInfoRepository.IsFollow(claims.Id, userIdInt64) //查询A是否关注B
-	//isFollow := flag
+
+	authorIdInt64, _ := strconv.ParseInt(authorId, 10, 64)
 	var results []serializer.Video
-	user, _ := publishRepository.SelectById(userIdInt64) //TODO is_favorite
-	userResp := serializer.User{Id: userIdInt64, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount}
-	model.DB.Model(&model.Video{}).Select("id,cover_url,play_url,favorite_count, comment_count,title").Where("author_id=?", userId).Find(&results)
-	fmt.Println(results)
+	user, _ := publishRepository.SelectById(authorIdInt64)
+	_, isFollow := publishRepository.IsFollow(claims.Id, authorIdInt64)
+	userResp := serializer.User{Id: authorIdInt64, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow}
+	model.DB.Model(&model.Video{}).Select("id,cover_url,play_url,favorite_count, comment_count,title").Where("author_id = ?", authorId).Find(&results)
+	fmt.Println("以上Error可以无视")
 	for i := 0; i < len(results); i++ {
 		results[i].Author = userResp
+		results[i].IsFavorite = favoriteRepository.IsFavorite(results[i].Id, claims.Id)
 	}
 	return serializer.PublishResponse{
 		Response:  serializer.Response{StatusCode: code, StatusMsg: e.GetMsg(code)},

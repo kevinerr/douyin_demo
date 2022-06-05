@@ -42,14 +42,14 @@ func (service *FeedService) VideoList(latestTime string, token string) serialize
 	} else { //已登录
 		isLogin = true
 	}
-	var videos = make([]serializer.Video, 2) //TODO,单次最多返回的视频个数
+	var videos = make([]serializer.Video, 2) //单次最多返回的视频个数
 	var res []model.Video
 	int64latestTime, _ := strconv.ParseInt(latestTime, 10, 64)                                                   //将string时间戳转化为int64时间戳
 	timeStr := time.Unix(int64latestTime, 0).Format(timeLayoutStr)                                               //将int64时间戳装换成是string时间
 	model.DB.Model(&model.Video{}).Where("create_time<?", timeStr).Limit(2).Order("create_time DESC").Find(&res) //返回按投稿时间小于timeStr的视频
-	fmt.Println(res)
+
 	for i := 0; i < len(res); i++ {
-		user, _ := userRepository.SelectById(res[i].AuthorId) //TODO 好笨的方法
+		user, _ := userRepository.SelectById(res[i].AuthorId)
 		videos[i].Id = res[i].Id
 		videos[i].CoverUrl = res[i].CoverUrl
 		videos[i].PlayUrl = res[i].PlayUrl
@@ -67,12 +67,15 @@ func (service *FeedService) VideoList(latestTime string, token string) serialize
 		userResp := serializer.User{Id: user.Id, Name: user.Username, FollowCount: user.FollowCount, FollowerCount: user.FollowerCount, IsFollow: isFollow}
 		videos[i].Author = userResp
 	}
+	var next_time time.Time
+	if len(res)-1 >= 0 {
+		next_time = res[len(res)-1].CreateTime
+	} else {
+		return serializer.FeedResponse{
+			Response: serializer.Response{StatusCode: e.UNDOSUCCESS, StatusMsg: "视频都要被您刷完了鸭！~"},
+		}
+	}
 
-	next_time := res[len(res)-1].CreateTime
-	//fmt.Println(next_time)
-	//fmt.Println(next_time.Unix() - 3600*8)
-
-	//next_time := res[1].CreateTime
 	fmt.Println("返回的视频集最早时间：", (next_time.Unix()-3600*8)*1000, time.Unix(next_time.Unix()-3600*8, 0).Format(timeLayoutStr))
 
 	return serializer.FeedResponse{

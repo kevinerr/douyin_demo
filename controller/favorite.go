@@ -80,7 +80,7 @@ func FavoriteAction(c *gin.Context) {
 	*/
 
 	// 点赞操作
-	res := favoriteService.DisposeFavorite(userId, videoId, int32(actionType), token)
+	res := favoriteService.DisposeFavorite(userId, videoId, int32(actionType), claims)
 	c.JSON(http.StatusOK, res)
 
 }
