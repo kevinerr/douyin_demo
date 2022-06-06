@@ -51,7 +51,7 @@ https://user-images.githubusercontent.com/42311991/172158971-900b7f97-4ce8-4b67-
 https://user-images.githubusercontent.com/42311991/172159310-a4c43541-eed5-4acb-a0e7-00eb5b96992a.mp4
 
 ### 视频封面展示
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E8%A7%86%E9%A2%91%E5%B0%81%E9%9D%A2%E5%B1%95%E7%A4%BA.mp4
+https://user-images.githubusercontent.com/42311991/172159535-67378e5d-324a-4983-b365-7c9d117aec94.mp4
 
 ### 连续刷视频操作
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E8%BF%9E%E7%BB%AD%E5%88%B7%E8%A7%86%E9%A2%91%E6%93%8D%E4%BD%9C.mp4
