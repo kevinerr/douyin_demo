@@ -30,7 +30,7 @@
 ## 运行效果展示
 
 ### 未登录刷视频及看评论
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E6%9C%AA%E7%99%BB%E5%BD%95%E5%88%B7%E8%A7%86%E9%A2%91%E5%8F%8A%E7%9C%8B%E8%AF%84%E8%AE%BA.mp4
+https://user-images.githubusercontent.com/42311991/172157241-3e7ce023-2362-4265-a443-63facbe14db5.mp4
 
 ### 注册及自动登录登录、退出账号重新登陆
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E6%B3%A8%E5%86%8C%E5%8F%8A%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%99%BB%E5%BD%95%E3%80%81%E9%80%80%E5%87%BA%E8%B4%A6%E5%8F%B7%E9%87%8D%E6%96%B0%E7%99%BB%E9%99%86.mp4
