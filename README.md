@@ -33,7 +33,7 @@
 https://user-images.githubusercontent.com/42311991/172157241-3e7ce023-2362-4265-a443-63facbe14db5.mp4
 
 ### 注册及自动登录登录、退出账号重新登陆
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E6%B3%A8%E5%86%8C%E5%8F%8A%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%99%BB%E5%BD%95%E3%80%81%E9%80%80%E5%87%BA%E8%B4%A6%E5%8F%B7%E9%87%8D%E6%96%B0%E7%99%BB%E9%99%86.mp4
+https://user-images.githubusercontent.com/42311991/172157612-b68fdaa2-4c6e-4fc0-938c-14559176c635.mp4
 
 ### 查看其他用户信息
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E6%9F%A5%E7%9C%8B%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF.mp4
