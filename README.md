@@ -42,7 +42,7 @@ https://user-images.githubusercontent.com/42311991/172157797-25a4ad14-a41b-4b49-
 https://user-images.githubusercontent.com/42311991/172158140-88742b8d-ce25-4e4e-be19-77ba327d55e9.mp4
 
 ### 点赞及取消点赞
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E7%82%B9%E8%B5%9E%E5%8F%8A%E5%8F%96%E6%B6%88%E7%82%B9%E8%B5%9E.mp4
+https://user-images.githubusercontent.com/42311991/172158459-f39691f1-6e21-4bec-9530-446a106209c0.mp4
 
 ### 评论及删除评论
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E8%AF%84%E8%AE%BA%E5%8F%8A%E5%88%A0%E9%99%A4%E8%AF%84%E8%AE%BA.mp4
