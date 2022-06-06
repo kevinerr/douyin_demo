@@ -216,8 +216,6 @@ Token规则的实现借助[**jwt-go**](https://github.com/dgrijalva/jwt-go "http
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/douyin_db.sql
 ### 数据库设计在线文档
 https://hng36mno7d.feishu.cn/docs/doccnfKsXYpPrqNHdAT7EPM3Fid
-### 演示视频下载
-
 ### 汇报文档下载
 
 ### 官方APP下载地址
