@@ -140,7 +140,7 @@ func (service *FollowService) GetFollowListByUId(token, userId string) ([]User, 
 			FollowerCount: u.FollowerCount,
 			FollowCount:   u.FollowCount,
 		}
-		_, user.IsFollow = userDao.IsFollow(num, u.Id)
+		_, user.IsFollow = userDao.IsFollow(claims.Id, u.Id)
 		users = append(users, user)
 	}
 	//返回
@@ -194,7 +194,7 @@ func (service *FollowService) GetFollowerListByUId(token, userId string) ([]User
 			FollowerCount: u.FollowerCount,
 			FollowCount:   u.FollowCount,
 		}
-		_, user.IsFollow = userDao.IsFollow(u.Id, num)
+		_, user.IsFollow = userDao.IsFollow(u.Id, claims.Id)
 		users = append(users, user)
 	}
 	return users, Response{

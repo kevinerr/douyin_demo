@@ -121,7 +121,6 @@ func FavoriteList(c *gin.Context) {
 		})
 		return
 	}
-	userId = claims.Id
 
 	// 获取点赞列表
 	res := favoriteService.GetFavorites(userId)
