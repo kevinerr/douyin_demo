@@ -54,7 +54,7 @@ https://user-images.githubusercontent.com/42311991/172159310-a4c43541-eed5-4acb-
 https://user-images.githubusercontent.com/42311991/172159535-67378e5d-324a-4983-b365-7c9d117aec94.mp4
 
 ### 连续刷视频操作
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E8%BF%9E%E7%BB%AD%E5%88%B7%E8%A7%86%E9%A2%91%E6%93%8D%E4%BD%9C.mp4
+https://user-images.githubusercontent.com/42311991/172159818-9f5828cc-2602-47ee-99d2-e3824d7b929f.mp4
 
 ------------
 ## 项目介绍
