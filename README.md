@@ -63,6 +63,7 @@ https://user-images.githubusercontent.com/42311991/172159818-9f5828cc-2602-47ee-
 本项目实现了官方APP抖声的接口，为其提供后端服务，接口部分实现详见 * [后端接口信息](##-后端接口信息) <br/>
 视频封面借助ffmpeg-go实现由视频自动抽帧生成： https://github.com/u2takey/ffmpeg-go <br/><br/>
 **项目演示地址**：http://47.98.251.199:8080/ (在抖声APP高级设置中填入以上地址可以直接接入后端) <br/>
+**Linux发布版**：[Release下载链接]([https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7#](https://github.com/kevinerr/douyin_demo/releases/tag/1.0) "Release下载链接")<br/>
 
 ------------
 ## 项目安全策略
