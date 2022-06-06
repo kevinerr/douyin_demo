@@ -36,7 +36,7 @@ https://user-images.githubusercontent.com/42311991/172157241-3e7ce023-2362-4265-
 https://user-images.githubusercontent.com/42311991/172157612-b68fdaa2-4c6e-4fc0-938c-14559176c635.mp4
 
 ### 查看其他用户信息
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E6%9F%A5%E7%9C%8B%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF.mp4
+https://user-images.githubusercontent.com/42311991/172157797-25a4ad14-a41b-4b49-8068-08b6dbf201bf.mp4
 
 ### 关注及取消关注用户、用户的粉丝、用户的关注
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E5%85%B3%E6%B3%A8%E5%8F%8A%E5%8F%96%E6%B6%88%E5%85%B3%E6%B3%A8%E7%94%A8%E6%88%B7%E3%80%81%E7%94%A8%E6%88%B7%E7%9A%84%E7%B2%89%E4%B8%9D%E3%80%81%E7%94%A8%E6%88%B7%E7%9A%84%E5%85%B3%E6%B3%A8.mp4
