@@ -1,10 +1,8 @@
 # <span id="head1">字节训练营 Go语言-抖音实战项目[抖声APP]</span>
 
-------------
-
 ## [目录](#toc)
 
-------------
+<br/><br/><br/><br/>
 ## <span id="head2"> 项目基本信息</span>
 ### <span id="head3"> 小组队号：4096<br/></span>
 ### <span id="head4">小组队名：CTRL NO.1 队<br/></span>
@@ -31,7 +29,8 @@
 	五、README：@祁盼 
 	六、演示文件：@祁盼 @谢庭宇 @杭朋洁 
 
-------------
+<br/>
+
 ## <span id="head7"> 运行效果展示</span>
 
 ### <span id="head8"> 未登录刷视频及看评论</span>
@@ -61,7 +60,8 @@ https://user-images.githubusercontent.com/42311991/172159535-67378e5d-324a-4983-
 ### <span id="head16"> 连续刷视频操作</span>
 https://user-images.githubusercontent.com/42311991/172159818-9f5828cc-2602-47ee-99d2-e3824d7b929f.mp4
 
-------------
+<br/>
+
 ## <span id="head17"> 项目介绍</span>
 使用Go语言、常用框架、Mysql数据库、OSS对象存储等实现[极简版抖音APP（抖声）](https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7# "极简版抖音APP（抖声）")<br/>
 本项目存储借助Mysql数据库、OSS对象存储实现（无需在本机安装mysql、redis环境，存储服务由**其他主机提供**，请保持本后端所依附主机接入互联网以接入数据库服务）<br/>
@@ -70,7 +70,8 @@ https://user-images.githubusercontent.com/42311991/172159818-9f5828cc-2602-47ee-
 ### <span id="head18">项目演示地址：http://47.98.251.199:8080/ (在抖声APP高级设置中填入以上地址可以直接接入后端) <br/></span>
 ### <span id="head19">Linux发布版：[Release下载链接](https://github.com/kevinerr/douyin_demo/releases/tag/1.0 "Release下载链接")<br/></span>
 
-------------
+<br/>
+
 ## <span id="head20"> 项目安全策略</span>
 
 ### <span id="head21"> 1、SQL注入预防</span>
@@ -176,7 +177,8 @@ Token规则的实现借助[**jwt-go**](https://github.com/dgrijalva/jwt-go "http
 | ------------ | ------------ |
 |  starine |  $2a$12$YwGv6/esUXyGvNde9IZRIe8BUJhNFBujNbZKk2WWtNLbRHA6TneeK |
 
-------------
+<br/>
+
 ## <span id="head32"> 项目部署方式</span>
 ### <span id="head33"> 编译</span>
 在项目根目录下执行：
@@ -195,7 +197,8 @@ Token规则的实现借助[**jwt-go**](https://github.com/dgrijalva/jwt-go "http
 然后Ctrl+A+D退出screen即可
 输出日志保存在./dousheng.log中
 
-------------
+<br/>
+
 ## <span id="head35"> 后端接口信息</span>
 |  接口 |  地址 |  请求方式 | 作者  |  接口描述 |  水平权限限制 | 垂直权限限制 |
 | ------------ | ------------ | ------------ | ------------ | ------------ | ------------ |------------ |
@@ -216,7 +219,8 @@ Token规则的实现借助[**jwt-go**](https://github.com/dgrijalva/jwt-go "http
 | 关注列表  | /douyin/relatioin/follow/list/  | GET  | 林叶润  | 用户关注的所有用户信息列表  | 登录  | 无  |
 | 粉丝列表  | /douyin/relation/follower/list/  | GET  | 林叶润  | 用户所有的粉丝信息列表  | 登录  | 无  |
 
-------------
+<br/>
+
 ## <span id="head36"> 附件下载地址</span>
 ### <span id="head37"> 数据库SQL文件（不附带演示数据）</span>
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/douyin_db.sql
@@ -229,7 +233,8 @@ https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7#
 ### <span id="head41"> 官方在线接口文档</span>
 https://www.apifox.cn/apidoc/shared-8cc50618-0da6-4d5e-a398-76f3b8f766c5/api-18345145
 
-------------
+<br/>
+
 ## <span id="head42"> 依赖安装方式</span>
 ### <span id="head43"> Linux下ffmpeg的安装</span>
 参考链接：https://zhuanlan.zhihu.com/p/416620143
