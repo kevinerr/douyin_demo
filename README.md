@@ -227,7 +227,7 @@ https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/douyin_db.sql
 ### <span id="head38"> 数据库设计在线文档</span>
 https://hng36mno7d.feishu.cn/docs/doccnfKsXYpPrqNHdAT7EPM3Fid
 ### <span id="head39"> 汇报文档下载（PPT）</span>
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E6%8A%96%E9%9F%B3%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE%E5%B1%95%E7%A4%BA.pptx
+https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E6%8A%96%E9%9F%B3%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE%E5%B1%95%E7%A4%BA%E6%B1%87%E6%8A%A5%E6%96%87%E6%A1%A3.pptx
 ### <span id="head40"> 官方APP下载地址</span>
 https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7#
 ### <span id="head41"> 官方在线接口文档</span>
