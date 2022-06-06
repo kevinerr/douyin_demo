@@ -48,7 +48,7 @@ https://user-images.githubusercontent.com/42311991/172158459-f39691f1-6e21-4bec-
 https://user-images.githubusercontent.com/42311991/172158971-900b7f97-4ce8-4b67-8241-01ecfcac8f45.mp4
 
 ### 发布视频
-https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E5%8F%91%E5%B8%83%E8%A7%86%E9%A2%91.mp4
+https://user-images.githubusercontent.com/42311991/172159310-a4c43541-eed5-4acb-a0e7-00eb5b96992a.mp4
 
 ### 视频封面展示
 https://paper-boot.oss-cn-shanghai.aliyuncs.com/test/%E8%A7%86%E9%A2%91%E5%B0%81%E9%9D%A2%E5%B1%95%E7%A4%BA.mp4
