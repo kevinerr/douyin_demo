@@ -65,7 +65,7 @@ https://user-images.githubusercontent.com/42311991/172159818-9f5828cc-2602-47ee-
 ## <span id="head17"> 项目介绍</span>
 使用Go语言、常用框架、Mysql数据库、OSS对象存储等实现[极简版抖音APP（抖声）](https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7# "极简版抖音APP（抖声）")<br/>
 本项目存储借助Mysql数据库、OSS对象存储实现（无需在本机安装mysql、redis环境，存储服务由**其他主机提供**，请保持本后端所依附主机接入互联网以接入数据库服务）<br/>
-本项目实现了官方APP抖声的接口，为其提供后端服务，接口部分实现详见 * [后端接口信息](##-后端接口信息) <br/>
+本项目实现了官方APP抖声的接口，为其提供后端服务，接口部分实现详见  [后端接口信息](#head35) <br/>
 视频封面借助ffmpeg-go实现由视频自动抽帧生成： https://github.com/u2takey/ffmpeg-go <br/><br/>
 ### <span id="head18">项目演示地址：http://47.98.251.199:8080/ (在抖声APP高级设置中填入以上地址可以直接接入后端) <br/></span>
 ### <span id="head19">Linux发布版：[Release下载链接](https://github.com/kevinerr/douyin_demo/releases/tag/1.0 "Release下载链接")<br/></span>
@@ -157,13 +157,13 @@ Token规则的实现借助[**jwt-go**](https://github.com/dgrijalva/jwt-go "http
 #### <span id="head28"> 水平越权风险</span>
 由于本项目只存在一类用户（User），因此不存在多用户之间的水平越权问题
 #### <span id="head29"> 垂直越权风险</span>
-用户由**登录态**和**未登录态**两种调用状态，直接可能存在的越权问题由Token规则提供保障，实现方式详见[token规则](###-2、token规则)
+用户由**登录态**和**未登录态**两种调用状态，直接可能存在的越权问题由Token规则提供保障，实现方式详见[token规则](#head24)
 
 <br/>
 
 ### <span id="head30"> 4、数据库索引检查</span>
 数据库的索引作为重要的安全和性能保障工作，由我们团队完成索引的设计和维护以保证数据库高效运行
-索引设计可见附件中的[数据库设计在线文档](###-数据库设计在线文档)或下载附件中的[数据库SQL文件](###- 数据库SQL文件（不附带演示数据）)以查看
+索引设计可见附件中的[数据库设计在线文档](#head38)或下载附件中的[数据库SQL文件](###- 数据库SQL文件（不附带演示数据）)以查看
  
 <br/>
 
