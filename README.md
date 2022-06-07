@@ -36,7 +36,7 @@
 ### <span id="head8"> 未登录刷视频及看评论</span>
 https://user-images.githubusercontent.com/42311991/172157241-3e7ce023-2362-4265-a443-63facbe14db5.mp4
 
-### <span id="head9"> 注册及自动登录登录、退出账号重新登陆</span>
+### <span id="head9"> 注册及自动登录、退出账号重新登陆</span>
 https://user-images.githubusercontent.com/42311991/172157612-b68fdaa2-4c6e-4fc0-938c-14559176c635.mp4
 
 ### <span id="head10"> 查看其他用户信息</span>
