@@ -66,7 +66,8 @@ https://user-images.githubusercontent.com/42311991/172159818-9f5828cc-2602-47ee-
 使用Go语言、常用框架、Mysql数据库、OSS对象存储等实现[极简版抖音APP（抖声）](https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7# "极简版抖音APP（抖声）")<br/>
 本项目存储借助Mysql数据库、OSS对象存储实现（无需在本机安装mysql、redis环境，存储服务由**其他主机提供**，请保持本后端所依附主机接入互联网以接入数据库服务）<br/>
 本项目实现了官方APP抖声的接口，为其提供后端服务，接口部分实现详见  [后端接口信息](#head35) <br/>
-视频封面借助ffmpeg-go实现由视频自动抽帧生成： https://github.com/u2takey/ffmpeg-go <br/><br/>
+本项目代码有**完善的注释**，并且经过了系统的**代码质量审查**<br/>
+视频**封面**借助ffmpeg-go实现由视频自动抽帧生成： https://github.com/u2takey/ffmpeg-go <br/><br/>
 ### <span id="head18">项目演示地址：http://47.98.251.199:8080/ (在抖声APP高级设置中填入以上地址可以直接接入后端) <br/></span>
 ### <span id="head19">Linux发布版：[Release下载链接](https://github.com/kevinerr/douyin_demo/releases/tag/1.0 "Release下载链接")<br/></span>
 
